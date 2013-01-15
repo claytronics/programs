@@ -1,0 +1,43 @@
+/* Map-reduces counting of words in all files of a directory */
+
+type linear route reducelink(node, node).
+type linear start(node, list int).
+type linear result(node, int).
+type linear computelength(node, list int, int, int, list int).
+type linear divideintwo(node, int, int, list int, list int).
+type linear sendwork(node, int, list int, list int).
+type linear dowork(node, int, int).
+type linear myresult(node, int, int).
+type linear result(node, int).
+
+const root = @1.
+const dir = "examples/mapreduce".
+
+start(root, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]).
+
+start(A, []) -o myresult(A, 0, 0).
+start(A, [X]) -o dowork(A, X, 0).
+
+start(A, [X | L]) -o computelength(A, L, X, 0, L).
+
+computelength(A, [], X, N, Ls) -o divideintwo(A, X, N/2, Ls, []).
+computelength(A, [Y | L], X, N, Ls) -o computelength(A, L, X, N + 1, Ls).
+
+divideintwo(A, X, 0, L1, L2) -o sendwork(A, X, L1, L2).
+divideintwo(A, X, N, [Y | L], L2) -o divideintwo(A, X, N - 1, L, [Y | L2]).
+
+sendwork(A, X, L1, L2)
+   -o exists B, C. (reducelink(B, A), reducelink(C, A), start(B, L1), start(C, L2)), dowork(A, X, 2).
+
+dowork(A, X, T) -o myresult(A, filecountwords(dir, X), T).
+
+myresult(A, X, 0) -o result(A, X).
+
+myresult(A, X, N),
+result(A, Y),
+N >= 1
+   -o myresult(A, X + Y, N - 1).
+
+result(A, Result),
+reducelink(A, B)
+   -o result(B, Result).

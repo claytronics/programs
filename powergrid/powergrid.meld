@@ -1,0 +1,133 @@
+/* Assigns sources to sinks in a powergrid */
+
+type route edge(node, node).
+type capacity(node, int).
+type sink(node, int).
+type source(node).
+type linear load(node, int).
+type linear changedload(node).
+type linear unplugged(node).
+type linear plugged(node, node).
+type linear connect(node, node, int).
+type linear disconnect(node).
+type linear connected(node, node, int).
+type linear infofree(node, node, int).
+type linear free(node, node, int).
+type linear total(node, int).
+
+const maxtotal = 1000.
+
+!edge(@0, @5).
+!edge(@0, @6).
+!edge(@0, @7).
+!edge(@0, @8).
+!edge(@0, @9).
+!edge(@1, @5).
+!edge(@1, @6).
+!edge(@1, @7).
+!edge(@1, @8).
+!edge(@1, @9).
+!edge(@2, @5).
+!edge(@2, @6).
+!edge(@2, @7).
+!edge(@2, @8).
+!edge(@2, @9).
+!edge(@3, @5).
+!edge(@3, @6).
+!edge(@3, @7).
+!edge(@3, @8).
+!edge(@3, @9).
+!edge(@4, @5).
+!edge(@4, @6).
+!edge(@4, @7).
+!edge(@4, @8).
+!edge(@4, @9).
+!edge(@5, @0).
+!edge(@5, @1).
+!edge(@5, @2).
+!edge(@5, @3).
+!edge(@5, @4).
+!edge(@6, @0).
+!edge(@6, @1).
+!edge(@6, @2).
+!edge(@6, @3).
+!edge(@6, @4).
+!edge(@7, @0).
+!edge(@7, @1).
+!edge(@7, @2).
+!edge(@7, @3).
+!edge(@7, @4).
+!edge(@8, @0).
+!edge(@8, @1).
+!edge(@8, @2).
+!edge(@8, @3).
+!edge(@8, @4).
+!edge(@9, @0).
+!edge(@9, @1).
+!edge(@9, @2).
+!edge(@9, @3).
+!edge(@9, @4).
+!sink(@0, 5).
+!sink(@1, 5).
+!sink(@2, 5).
+!sink(@3, 5).
+!sink(@4, 5).
+!source(@5).
+!capacity(@5, 5).
+!source(@6).
+!capacity(@6, 5).
+!source(@7).
+!capacity(@7, 5).
+!source(@8).
+!capacity(@8, 5).
+!source(@9).
+!capacity(@9, 5).
+
+!source(A), !capacity(A, Cap) -o load(A, 0), {B | !edge(A, B) | infofree(B, A, Cap)}.
+!sink(A, _) -o total(A, 0), unplugged(A).
+
+[ :random B |
+	unplugged(A),
+	!sink(A, Total),
+	!edge(A, B),
+	$free(A, B, Free),
+	Free >= Total,
+	total(A, T),
+	T < maxtotal ]
+	-o plugged(A, B), connect(B, A, Total), total(A, T + 1).
+
+/* random selection */
+
+connect(A, B, Total),
+load(A, Old)
+	-o load(A, Old + Total), changedload(A), connected(A, B, Total).
+	
+[ :random B |
+	load(A, Old),
+	!capacity(A, Cap),
+	Old > Cap,
+	!edge(A, B),
+	connected(A, B, Total) ]
+	-o disconnect(B), load(A, Old - Total), changedload(A).
+	
+[ :random B |
+	changedload(A),
+	load(A, Load),
+	!capacity(A, Cap),
+	randint(20) < 10,
+	connected(A, B, Total),
+	!edge(A, B) ]
+	-o disconnect(B), load(A, Load - Total), changedload(A).
+	
+changedload(A),
+load(A, Load),
+!capacity(A, Cap)
+	-o load(A, Load), {B | !edge(A, B) | infofree(B, A, Cap - Load)}. 
+
+disconnect(A),
+plugged(A, B)
+	-o unplugged(A).
+	
+infofree(A, B, Total), free(A, B, _) -o free(A, B, Total).
+infofree(A, B, Total) -o free(A, B, Total).
+

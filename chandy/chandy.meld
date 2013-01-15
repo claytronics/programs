@@ -1,0 +1,161 @@
+/* Algorithm described in Chandy and Misra's Distributed Computation on Graphs: Shortest Path Algorithms (1982) */
+
+type route edge(node, node, int).
+type route back(node, node).
+type linear length(node, node, int).
+type linear distance(node, int).
+type linear pred(node, node).
+type linear num(node, int).
+type linear start(node).
+type linear maysendack(node, node, int).
+type linear ack(node).
+type linear ackifzero(node, node, int).
+type linear phase2ifzero(node, int).
+type linear over?(node).
+type linear over-(node).
+type successors(node, sum int).
+type linear donephase2(node, int).
+
+const infinity = 99999.
+const minusinfinity = -99999.
+const true = 1.
+const false = 0.
+
+!edge(@1, @2, 3). !back(@2, @1).
+!edge(@1, @3, 4). !back(@3, @1).
+!edge(@2, @4, 2). !back(@4, @2).
+!edge(@3, @4, 6). !back(@4, @3).
+!edge(@4, @5, 1). !back(@5, @4).
+!edge(@5, @2, 4). !back(@2, @5).
+!edge(@4, @6, 2). !back(@6, @4).
+
+
+!successors(A, 0).
+!edge(A, _, _) -o !successors(A, 1).
+
+/* initialization */
+donephase2(A, false).
+num(A, 0).
+distance(@1, 0).
+distance(@2, infinity). pred(@2, @1).
+distance(@3, infinity). pred(@3, @1).
+distance(@4, infinity). pred(@4, @1).
+distance(@5, infinity). pred(@5, @1).
+distance(@6, infinity). pred(@6, @1).
+start(@1).
+
+/* initialization for @1 */
+!successors(A, T),
+num(A, N),
+start(A)
+	-o {B, W | !edge(A, B, W) | length(B, A, W)}, num(A, N + T).
+
+/* length message for node @1, when D < 0: start phase 2 */
+length(A, From, NegativeDistance),
+A = @1,
+NegativeDistance < 0,
+distance(A, Distance)
+	-o distance(A, minusinfinity), {B, W | !edge(A, B, W) | over-(B)}.
+
+/* length message for nodes != @1: new shorter distance */
+length(A, From, NewDistance),
+distance(A, OldDistance),
+OldDistance > NewDistance,
+num(A, Num),
+pred(A, Pred),
+!successors(A, Sucs)
+	-o maysendack(A, Pred, Num),
+		num(A, Num + Sucs),
+		pred(A, From),
+		distance(A, NewDistance),
+		{B, W | !edge(A, B, W) | length(B, A, W + NewDistance)},
+		ackifzero(A, From, Num + Sucs).
+
+/* length message for nodes != @1: not a shorter distance */
+length(A, From, LongerDistance),
+distance(A, Distance),
+LongerDistance >= Distance,
+!back(A, From)
+	-o distance(A, Distance),
+		ack(From).
+
+maysendack(A, From, Num),
+!back(A, From),
+Num > 0
+	-o ack(From).
+
+maysendack(A, _, Num), Num <= 0 -o .
+
+ackifzero(A, Back, Num),
+!back(A, Back),
+Num = 0
+	-o ack(Back).
+
+ackifzero(A, Back, Num), Num > 0 -o .
+
+/* receive ack for node @1 */
+ack(A),
+num(A, Num),
+A = @1
+	-o num(A, Num - 1), phase2ifzero(A, Num - 1).
+
+phase2ifzero(A, Num),
+donephase2(A, false),
+A = @1,
+Num = 0
+	-o donephase2(A, true),
+		{B, W | !edge(A, B, W) | over?(B)}.
+
+phase2ifzero(A, Num) -o .
+
+/* receive ack for nodes != @1*/
+ack(A),
+num(A, Num),
+pred(A, Back)
+	-o num(A, Num - 1), ackifzero(A, Back, Num - 1), pred(A, Back).
+
+/* receive over? for nodes != @1 */
+over?(A),
+distance(A, Distance),
+donephase2(A, false),
+num(A, Num),
+Num = 0,
+Distance <> minusinfinity
+	-o {B, W | !edge(A, B, W) | over?(B)},
+		distance(A, Distance), num(A, Num),
+		donephase2(A, true).
+
+over?(A),
+distance(A, Distance),
+donephase2(A, false),
+num(A, Num),
+Num > 0,
+Distance <> minusinfinity
+	-o distance(A, minusinfinity), num(A, Num),
+		{B, W | !edge(A, B, W) | over-(B)},
+		donephase2(A, true).
+
+over?(A), donephase2(A, true) -o donephase2(A, false).
+
+/* receive over- for nodes != @1 */
+over-(A),
+distance(A, Distance),
+num(A, Num),
+donephase2(A, false),
+Num > 0,
+Distance <> minusinfinity
+	-o num(A, Num), distance(A, minusinfinity), {B, W | !edge(A, B, W) | over-(B)},
+		donephase2(A, true).
+
+over-(A),
+distance(A, Distance),
+donephase2(A, false),
+num(A, Num),
+Num = 0,
+Distance <> minusinfinity
+	-o num(A, Num), distance(A, minusinfinity),
+		{B, W | !edge(A, B, W) | over-(B)},
+		donephase2(A, true).
+
+over-(A), donephase2(A, true) -o donephase2(A, true).
+

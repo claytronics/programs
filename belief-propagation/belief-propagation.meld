@@ -1,0 +1,82 @@
+/* naive loopy belief propagation */
+
+type route edge(node, node).
+type coord(node, int).
+type potential(node, list float).
+type globalpotential(node, list float).
+type linear belief(node, list float, int, int).
+type linear message(node, node, list float, int).
+type linear messagefrom(node, node, list float, int).
+type linear oldmessagefrom(node, node, list float, int).
+type linear messageto(node, node, list float, int).
+type linear accumulator(node, int, list float, int).
+type neighbors(node, int).
+
+const startbel = [-1.609438, -1.609438, -1.609438, -1.609438, -1.609438].
+const startmsg = [-1.609438, -1.609438, -1.609438, -1.609438, -1.609438].
+const iterations = 100.
+const damping = 0.1.
+
+message(A, B, startmsg, 0) :- !edge(A, B).
+!globalpotential(A, [-0.000000, -10.000000, -20.000000, -30.000000, -40.000000, -10.000000, -0.000000, -10.000000, -20.000000, -30.000000, -20.000000, -10.000000, -0.000000, -10.000000, -20.000000, -30.000000, -20.000000, -10.000000, -0.000000, -10.000000, -40.000000, -30.000000, -20.000000, -10.000000, -0.000000]).
+!coord(@0, 0).
+!potential(@0, [-0.979456, -1.191881, -1.654306, -2.366730, -3.329155]).
+!coord(@1, 1).
+!potential(@1, [-2.637754, -1.929670, -1.471586, -1.263503, -1.305419]).
+!coord(@2, 2).
+!potential(@2, [-1.424627, -1.304458, -1.434290, -1.814122, -2.443954]).
+!coord(@3, 3).
+!potential(@3, [-2.426489, -1.803904, -1.431318, -1.308732, -1.436146]).
+!edge(@0, @1).
+!edge(@1, @0).
+!edge(@1, @3).
+!edge(@3, @1).
+!edge(@2, @3).
+!edge(@3, @2).
+!edge(@0, @2).
+!edge(@2, @0).
+
+!neighbors(@0, 2).
+!neighbors(@1, 2).
+!neighbors(@2, 2).
+!neighbors(@3, 2).
+!neighbors(A, T) -o accumulator(A, T, [0.0, 0.0, 0.0, 0.0, 0.0], 0).
+
+message(A, B, L, Id),
+edge(A, B),
+Id < (iterations - 1)
+	-o messagefrom(B, A, L, Id), messageto(A, B, L, Id).
+
+accumulator(A, 0, LF, Id),
+!potential(A, P),
+!neighbors(A, T),
+Id <= iterations
+	-o belief(A, normalize(addfloatlists(LF, P)), T, Id + 1),
+		accumulator(A, T, [0.0, 0.0, 0.0, 0.0, 0.0], Id + 1).
+
+messagefrom(A, B, L, Id),
+accumulator(A, T, LF, Id),
+T > 0
+	-o accumulator(A, T - 1, addfloatlists(LF, L), Id),
+	   oldmessagefrom(A, B, L, Id).
+
+belief(A, _, 0, Id),
+Id < (iterations - 1)
+	-o .
+
+message(A, _, _, Id),
+Id = (iterations - 1)
+	-o .
+
+belief(A, Belief, Total, Id1),
+Total > 0,
+Id1 = Id + 1,
+!globalpotential(A, GP),
+!edge(A, B),
+messageto(A, B, OldOut, Id),
+oldmessagefrom(A, B, OldIn, Id),
+Cavity = normalize(divide(Belief, OldIn)),
+Convolved = normalize(convolve(GP, Cavity))
+	-o message(A, B, damp(Convolved, OldOut, damping), Id1),
+		belief(A, Belief, Total - 1, Id1).
+
