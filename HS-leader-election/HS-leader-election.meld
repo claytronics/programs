@@ -1,0 +1,53 @@
+/* Hirschberg and Sinclair (HS) algorithm for leader election in a ring */
+/* Hypothesis: Each process has a unique UID, bidirectionnal ring */
+
+type route edge(node, node).
+type linear opposite(node, node).
+type linear phase(int).
+type linear propagated(int).
+type linear election(node, node, int, int, int).
+type linear reply(node, node, int, int).
+type linear reply-nbr(int).
+type linear leader-is(node, node, int).
+
+/* Used to obtain the opposite direction in the ring */
+!edge(A, B),!edge(A, C) -o 
+opposite(B, C), opposite(C, B).
+
+/* Phase(0) triggers the beginning of the algorithm */
+phase(0).
+propagated(0).
+
+/* An election message is sent to the neighbors */
+phase(0) -o
+        {B | !edge(A, B) | election(B, A, node2int(A), 0, 0)}, phase(1).
+
+/* While d<2^k, election message is propagated */
+election(A, B, j, k, d), j>node2int(A), d<2^k, opposite(B,C) -o
+      election(C, A, j, k, d+1).  
+
+/* If we reached d=2^k, stop election and send back reply */
+election(A, B, j, k, d), j>node2int(A), d=2^k -o
+      reply(B, A, j, k).
+
+/* If j=node2int(A) then I'm the leader */
+election(A, B, j, k, d), j=node2int(A) -o
+      set-color(A, 255, 0 , 0),
+      {B | !edge(A, B) | leader-is(B, A, my-id)}.
+
+/* If I receive a reply which is not for me, I forward it */
+reply(A, B, j, k), j<>node2int(A), opposite(B,C) -o
+      reply(C, A, j, k).
+
+/* If I receive a reply which is for me, and it's the first one, I do nothing */
+reply(A, B, j, k), j=node2int(A), reply-nbr(k, 0) -o reply-nbr(k,1).
+
+/* If I receive a second reply, I set another round of election because, I'm a local leader */
+reply(A, B, j, k), j=node2int(A), reply-nbr(k, 1), opposite(B,C), phase(x) -o
+      reply-nbr(k,0),
+      phase(x+1),
+      {B | !edge(A, B) | election(B, A, node2int(A), x+1, 1)}.
+
+/* Propagate the leader status */
+leader-is(A, B, id), opposite(B,C), propagated(0) -o setcolor(0,0,0), leader-is(C, A, id), propagated(1).
+
