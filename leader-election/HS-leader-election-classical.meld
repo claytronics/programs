@@ -1,0 +1,74 @@
+/* Hirschberg and Sinclair (HS) algorithm for leader election in a ring */
+/* Hypothesis: Each process has a unique UID, bidirectionnal ring */
+/* Uses classical logic as much as possible */
+/* Authors: S. Goldstein and J. Bourgeois */
+
+/* Status: draft version, not compiling */
+
+/* (cl-meld:meld-compile "/home/bourgeois/programs/leader-election/HS-leader-election-classical.meld" "/home/bourgeois/programs/leader-election/HS-leader-election-classical") */
+
+type linear phase(node, int).
+type local-leader(node).
+type left-check(node, node, in, int).
+type right-check(node, node, in, int).
+type all-done(node, int).
+type in-OK(node).
+type out-check(node, node, int).
+
+/* Definition of a bidirectional ring topology with 8 nodes */
+!edge(@1, @2). !edge(@1, @8). 
+!edge(@2, @1). !edge(@2, @3). 
+!edge(@3, @2). !edge(@3, @4). 
+!edge(@4, @3). !edge(@4, @5).
+!edge(@5, @4). !edge(@5, @6).
+!edge(@6, @5). !edge(@6, @7).   
+!edge(@7, @6). !edge(@7, @8).   
+!edge(@8, @7). !edge(@8, @1).   
+
+phase(A, 0).
+local-leader(X).
+
+left-check(N, S, _, Nn),
+right-check(N, T, _, Nn) -o
+	       all-done(T, Nn), all-done(S, Nn).
+
+left-check(N, S, K, Nn),
+left-edge(N, M),
+node2int(M) <= Nn -o
+	    left-check(M, N, K - 1, Nn).
+
+all-done(X, Nn),
+left-check(X, S, K, Nn) -o
+	      local-leader(X, Nn),
+	      all-done(S, Nn).
+
+left-check(N, M, O, Nn) -o in-OK(M), local-leader(N, Nn).
+
+in-OK(M),
+left-check(M, S, _, Nn) -o
+	      in-OK(S),
+	      local-leader(M, N).
+
+out-check(A, K, Nn) -o 
+	     left-check(A, A, K, Nn),
+	     right-check(A, A, K, Nn).
+	    
+in-OK(X),
+left-check(X, X, K, _),
+phase(K) -o
+	 phase(K * 2).
+
+all-done(X, Nn),
+left-check(X, X, K, Nn),
+phase(Y) -o
+	 phase (Y * 2),
+	 [B | edge(X, B) | ?????? ].
+
+?phase(K),
+local-leader(A, Nn),
+node2int(A)==n -o
+	       out-check(A, K, Nn).
+
+retracted out-check(A, K, Nn) -o
+	  ?phase(0).
+
