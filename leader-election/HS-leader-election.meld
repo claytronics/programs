@@ -1,53 +1,68 @@
 /* Hirschberg and Sinclair (HS) algorithm for leader election in a ring */
 /* Hypothesis: Each process has a unique UID, bidirectionnal ring */
+/* Uses linear logic */
+/* Author: J. Bourgeois */
+/* (cl-meld:meld-compile "/home/bourgeois/programs/leader-election/HS-leader-election.meld" "/home/bourgeois/programs/leader-election/HS-leader-election") */
+
+/* Status: not compiling on Linux/Ubuntu, comprehension problem */  
 
 type route edge(node, node).
 type linear opposite(node, node).
-type linear phase(int).
-type linear propagated(int).
+type linear phase(node, int).
+type linear propagated(node, int).
 type linear election(node, node, int, int, int).
 type linear reply(node, node, int, int).
-type linear reply-nbr(int).
+type linear reply-nbr(node, int).
 type linear leader-is(node, node, int).
+
+/* Definition of a bidirectional ring topology with 8 nodes */
+!edge(@1, @8). !edge(@1, @2). 
+!edge(@2, @1). !edge(@2, @3). 
+!edge(@3, @2). !edge(@3, @4). 
+!edge(@4, @3). !edge(@4, @5).
+!edge(@5, @4). !edge(@5, @6).
+!edge(@6, @5). !edge(@6, @7).   
+!edge(@7, @6). !edge(@7, @8).   
+!edge(@8, @7). !edge(@8, @1). 
 
 /* Used to obtain the opposite direction in the ring */
 !edge(A, B),!edge(A, C) -o 
 opposite(B, C), opposite(C, B).
 
 /* Phase(0) triggers the beginning of the algorithm */
-phase(0).
-propagated(0).
+phase(A, 0).
+propagated(A, 0).
 
 /* An election message is sent to the neighbors */
-phase(0) -o
-        {B | !edge(A, B) | election(B, A, node2int(A), 0, 0)}, phase(1).
+phase(A, 0), J = node2int(A) -o
+        {B | !edge(A, B) | election(B, A, J, 0, 0)}, phase(A, 1).
 
 /* While d<2^k, election message is propagated */
-election(A, B, j, k, d), j>node2int(A), d<2^k, opposite(B,C) -o
-      election(C, A, j, k, d+1).  
+election(A, B, J, K, D), J > node2int(A), P = intpower(2, K), D < P, opposite(B,C) -o
+      election(C, A, J, K, D + 1).  
 
 /* If we reached d=2^k, stop election and send back reply */
-election(A, B, j, k, d), j>node2int(A), d=2^k -o
-      reply(B, A, j, k).
+election(A, B, J, K, D), J > node2int(A), P = intpower(2, K), D >= P -o
+      reply(B, A, J, K).
 
 /* If j=node2int(A) then I'm the leader */
-election(A, B, j, k, d), j=node2int(A) -o
-      set-color(A, 255, 0 , 0),
-      {B | !edge(A, B) | leader-is(B, A, my-id)}.
+election(A, B, J, K, D), J = node2int(A) -o
+      setcolor(A, 255, 0 , 0),
+      {B | !edge(A, B) | leader-is(B, A, J)}.
 
 /* If I receive a reply which is not for me, I forward it */
-reply(A, B, j, k), j<>node2int(A), opposite(B,C) -o
-      reply(C, A, j, k).
+reply(A, B, J, K), J <> node2int(A), opposite(B,C) -o
+      reply(C, A, J, K).
 
 /* If I receive a reply which is for me, and it's the first one, I do nothing */
-reply(A, B, j, k), j=node2int(A), reply-nbr(k, 0) -o reply-nbr(k,1).
+reply(A, B, J, K), J = node2int(A), reply-nbr(A, 0) -o reply-nbr(A, 1).
 
 /* If I receive a second reply, I set another round of election because, I'm a local leader */
-reply(A, B, j, k), j=node2int(A), reply-nbr(k, 1), opposite(B,C), phase(x) -o
-      reply-nbr(k,0),
-      phase(x+1),
-      {B | !edge(A, B) | election(B, A, node2int(A), x+1, 1)}.
+reply(A, B, J, K), J = node2int(A), reply-nbr(A, 1), phase(A, X) -o
+      reply-nbr(A, 0),
+      phase(A, X + 1),
+      {B | !edge(A, B) | election(B, A, J, X + 1, 1)}.
 
 /* Propagate the leader status */
-leader-is(A, B, id), opposite(B,C), propagated(0) -o setcolor(0,0,0), leader-is(C, A, id), propagated(1).
+leader-is(A, B, ID), opposite(B,C), propagated(A, 0) -o setcolor(0,0,0), leader-is(C, A, ID), propagated(A, 1).
 
