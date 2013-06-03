@@ -2,7 +2,6 @@
 
 type linear route reducelink(node, node).
 type linear start(node, list int).
-type linear result(node, int).
 type linear computelength(node, list int, int, int, list int).
 type linear divideintwo(node, int, int, list int, list int).
 type linear sendwork(node, int, list int, list int).

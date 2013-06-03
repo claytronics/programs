@@ -1,6 +1,6 @@
 
-/* A Distributed Algorithm for the Maximum Flow Problem */
-/* presentation: http://www2.lifl.fr/ispdc2005/presentations/ispdc-maxflow-PHAM.pdf */
+// A Distributed Algorithm for the Maximum Flow Problem
+// presentation: http://www2.lifl.fr/ispdc2005/presentations/ispdc-maxflow-PHAM.pdf
 
 type typ(node, int).
 type linear state(node, int).
@@ -55,7 +55,7 @@ const return-init-height = 1.
 const return-init-height-source = 2.
 const return-change-excess = 3.
 
-/* s: 0 | a: 1 | b: 2 | c: 3 | d: 4 | t: 5 */
+// s: 0 | a: 1 | b: 2 | c: 3 | d: 4 | t: 5
 !edge(@0, @1, 13, output). !edge(@1, @0, 13, input).
 !edge(@0, @2, 11, output). !edge(@2, @0, 11, input).
 !edge(@1, @2, 1, output). !edge(@2, @1, 1, input).
@@ -69,7 +69,7 @@ const return-change-excess = 3.
 !typ(@5, sink).
 !typ(@1, normal). !typ(@2, normal). !typ(@3, normal). !typ(@4, normal).
 
-/* 3. initialization */
+// 3. initialization
 height(A, 0).
 excess(A, 0).
 state(A, inactive).
@@ -95,7 +95,7 @@ may-do-init-height(A),
 NotSink <> sink
    -o token(A).
 
-/* init-height() */
+// init-height()
 do-init-height(A, Ret),
 height(A, Height)
    -o {B, W, R, T | !edge(A, B, W, T), rv(A, B, R), R = 0 | init-height(B, A, Height), rv(A, B, R) },
@@ -103,13 +103,13 @@ height(A, Height)
       height(A, Height),
       proc-return(A, Ret).
 
-/* 6. upon receipt of (NEW-HEIGHT, h) msg from w */
+// 6. upon receipt of (NEW-HEIGHT, h) msg from w
 new-height(A, W, H),
 token(A),
 edge-height(A, W, _)
    -o edge-height(A, W, H), token(A).
 
-/* 5. upon receipt of (init-height, h) from w */
+// 5. upon receipt of (init-height, h) from w
 init-height(A, W, H),
 token(A),
 edge-height(A, W, _)
@@ -173,14 +173,14 @@ accumulate-excess(A)
       {B, W | rv-copy(A, B, W) | rv(A, B, W)},
       proc-return(A, return-change-excess).
 
-/* 7. push() */
+// 7. push()
 do-push(A, dolift),
 !typ(A, sink),
 excess(A, Excess)
    -o excess(A, Excess),
       may-do-lift(A, Excess).
 
-/* return immediately */
+// return immediately
 do-push(A, nolift),
 !typ(A, sink)
    -o token(A).
@@ -213,7 +213,7 @@ excess(A, Excess)
    -o excess(A, Excess),
       may-do-lift(A, Excess).
 
-/* 8. upon receipt of (push-request delta) msg from w */
+// 8. upon receipt of (push-request delta) msg from w
 push-request(A, W, Delta),
 token(A),
 edge-height(A, W, EH),
@@ -225,7 +225,7 @@ rv(A, W, RV)
       rv(A, W, RV + Delta),
       find-all-push-requests(A, Delta).
 
-/* this is different from the paper... we collect all the requests to push them all at once */
+// this is different from the paper... we collect all the requests to push them all at once
 find-all-push-requests(A, Acc),
 push-request(A, W, Delta),
 edge-height(A, W, EH),
@@ -237,7 +237,7 @@ rv(A, W, RV)
       rv(A, W, RV + Delta),
       find-all-push-requests(A, Acc + Delta).
  
-/* no more push-requests */
+// no more push-requests
 find-all-push-requests(A, Acc)
    -o push-request2(A, Acc).
 
@@ -258,7 +258,7 @@ NotSink <> sink
    -o state(A, active),
       push-request3(A, Delta).
 
-/* state not inactive or type not sink */
+// state not inactive or type not sink
 push-request2(A, Delta) -o push-request3(A, Delta).
 
 push-request3(A, Delta),
@@ -275,7 +275,7 @@ push-request4(A, Delta),
 NotSink <> sink
    -o do-push(A, dolift).
 
-/* 9. upon receipt of (push-request-ans, Delta, NOK) msg from W */
+// 9. upon receipt of (push-request-ans, Delta, NOK) msg from W
 push-request-ans(A, W, Delta),
 excess(A, Excess),
 state(A, State),
@@ -293,12 +293,12 @@ may-do-lift(A, Val),
 Val <= 0
    -o token(A).
 
-/* 10. lift */
+// 10. lift
 do-lift(A),
 !typ(A, normal)
    -o select-best-height(A).
 
-/* node is sink or source... */
+// node is sink or source...
 do-lift(A) -o token(A).
 
 select-best-height(A),

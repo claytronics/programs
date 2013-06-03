@@ -1,6 +1,6 @@
 
-/* Taken from the paper called A Distributed Algorithm for Minimum-Weight Spanning Trees */
-/* http://cs-www.cs.yale.edu/homes/arvind/cs425/doc/ghs.pdf */
+// Taken from the paper called A Distributed Algorithm for Minimum-Weight Spanning Trees
+// http://cs-www.cs.yale.edu/homes/arvind/cs425/doc/ghs.pdf
 
 type linear state(node, int).
 type route edge(node, node, float).

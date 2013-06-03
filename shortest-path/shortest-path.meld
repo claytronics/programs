@@ -3,7 +3,7 @@
 type linear path(node, int, int).
 type route edge(node, node, int).
 
-priority path/2 asc.
+priority path/2 @asc.
 
 const finalnode = @4.
 const startnode = @1.
