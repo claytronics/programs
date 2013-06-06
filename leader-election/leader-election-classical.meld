@@ -3,10 +3,11 @@
 /* Hypothesis: All nodes have an unique ID */
 /* (cl-meld:meld-compile "/home/bourgeois/programs/leader-election/leader-election-classical.meld" "/home/bourgeois/programs/leader-election/leader-election-classical") */
 
-/* Status: not compiling on Linux/Ubuntu, unknow error */
+/* Status: Working */
 
 type route edge(node, node).
 type leader(node, max int).
+type is-leader(node, int).
 
 /* Definition of a random topology */
 !edge(@1, @2). !edge(@1, @3). !edge(@1, @4).
@@ -19,8 +20,5 @@ type leader(node, max int).
 
 !leader(X, node2int(X)).
 
-!edge(S, T),
-!leader(T, N),
-N > node2int(S) -o
-	      !leader(S, N),
-	      setcolor(S, 255,0,0).
+!edge(S, T), !leader(T, N), N > node2int(S) -o !leader(S, N), !is-leader(S, N).
+!is-leader(S, N), N = node2int(S) -o setcolor(S, 255,0,0).
