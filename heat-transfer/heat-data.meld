@@ -1,838 +1,1243 @@
+type inbound(node, int).
 type route edge(node, node, float).
+type coord(node, int, int).
+type inner(node).
+type linear heat(node, float).
+
+!inbound(@0, 4).
 !coord(@0, 0, 0).
 heat(@0, 5.0).
+!inbound(@1, 4).
 !coord(@1, 0, 1).
 heat(@1, 5.0).
+!inbound(@2, 4).
 !coord(@2, 0, 2).
 heat(@2, 5.0).
+!inbound(@3, 4).
 !coord(@3, 0, 3).
 heat(@3, 5.0).
+!inbound(@4, 4).
 !coord(@4, 0, 4).
 heat(@4, 5.0).
+!inbound(@5, 4).
 !coord(@5, 0, 5).
 heat(@5, 5.0).
+!inbound(@6, 4).
 !coord(@6, 0, 6).
 heat(@6, 5.0).
+!inbound(@7, 4).
 !coord(@7, 0, 7).
 heat(@7, 5.0).
+!inbound(@8, 4).
 !coord(@8, 0, 8).
 heat(@8, 5.0).
+!inbound(@9, 4).
 !coord(@9, 0, 9).
 heat(@9, 5.0).
+!inbound(@10, 4).
 !coord(@10, 0, 10).
 heat(@10, 5.0).
+!inbound(@11, 4).
 !coord(@11, 0, 11).
 heat(@11, 5.0).
+!inbound(@12, 4).
 !coord(@12, 0, 12).
 heat(@12, 5.0).
+!inbound(@13, 4).
 !coord(@13, 0, 13).
 heat(@13, 5.0).
+!inbound(@14, 4).
 !coord(@14, 0, 14).
 heat(@14, 5.0).
+!inbound(@15, 4).
 !coord(@15, 0, 15).
 heat(@15, 5.0).
+!inbound(@16, 4).
 !coord(@16, 0, 16).
 heat(@16, 5.0).
+!inbound(@17, 4).
 !coord(@17, 0, 17).
 heat(@17, 5.0).
+!inbound(@18, 4).
 !coord(@18, 0, 18).
 heat(@18, 5.0).
+!inbound(@19, 4).
 !coord(@19, 0, 19).
 heat(@19, 5.0).
+!inbound(@20, 4).
 !coord(@20, 1, 0).
 heat(@20, 5.0).
+!inbound(@21, 4).
 !coord(@21, 1, 1).
 heat(@21, 5.0).
+!inbound(@22, 4).
 !coord(@22, 1, 2).
 heat(@22, 5.0).
+!inbound(@23, 4).
 !coord(@23, 1, 3).
 heat(@23, 5.0).
+!inbound(@24, 4).
 !coord(@24, 1, 4).
 heat(@24, 5.0).
+!inbound(@25, 4).
 !coord(@25, 1, 5).
 heat(@25, 5.0).
+!inbound(@26, 4).
 !coord(@26, 1, 6).
 heat(@26, 5.0).
+!inbound(@27, 4).
 !coord(@27, 1, 7).
 heat(@27, 5.0).
+!inbound(@28, 4).
 !coord(@28, 1, 8).
 heat(@28, 5.0).
+!inbound(@29, 4).
 !coord(@29, 1, 9).
 heat(@29, 5.0).
+!inbound(@30, 4).
 !coord(@30, 1, 10).
 heat(@30, 5.0).
+!inbound(@31, 4).
 !coord(@31, 1, 11).
 heat(@31, 5.0).
+!inbound(@32, 4).
 !coord(@32, 1, 12).
 heat(@32, 5.0).
+!inbound(@33, 4).
 !coord(@33, 1, 13).
 heat(@33, 5.0).
+!inbound(@34, 4).
 !coord(@34, 1, 14).
 heat(@34, 5.0).
+!inbound(@35, 4).
 !coord(@35, 1, 15).
 heat(@35, 5.0).
+!inbound(@36, 4).
 !coord(@36, 1, 16).
 heat(@36, 5.0).
+!inbound(@37, 4).
 !coord(@37, 1, 17).
 heat(@37, 5.0).
+!inbound(@38, 4).
 !coord(@38, 1, 18).
 heat(@38, 5.0).
+!inbound(@39, 4).
 !coord(@39, 1, 19).
 heat(@39, 5.0).
+!inbound(@40, 4).
 !coord(@40, 2, 0).
 heat(@40, 5.0).
+!inbound(@41, 4).
 !coord(@41, 2, 1).
 heat(@41, 5.0).
+!inbound(@42, 4).
 !coord(@42, 2, 2).
 heat(@42, 5.0).
+!inbound(@43, 4).
 !coord(@43, 2, 3).
 heat(@43, 5.0).
+!inbound(@44, 4).
 !coord(@44, 2, 4).
 heat(@44, 5.0).
+!inbound(@45, 4).
 !coord(@45, 2, 5).
 heat(@45, 5.0).
+!inbound(@46, 4).
 !coord(@46, 2, 6).
 heat(@46, 5.0).
+!inbound(@47, 4).
 !coord(@47, 2, 7).
 heat(@47, 5.0).
+!inbound(@48, 4).
 !coord(@48, 2, 8).
 heat(@48, 5.0).
+!inbound(@49, 4).
 !coord(@49, 2, 9).
 heat(@49, 5.0).
+!inbound(@50, 4).
 !coord(@50, 2, 10).
 heat(@50, 5.0).
+!inbound(@51, 4).
 !coord(@51, 2, 11).
 heat(@51, 5.0).
+!inbound(@52, 4).
 !coord(@52, 2, 12).
 heat(@52, 5.0).
+!inbound(@53, 4).
 !coord(@53, 2, 13).
 heat(@53, 5.0).
+!inbound(@54, 4).
 !coord(@54, 2, 14).
 heat(@54, 5.0).
+!inbound(@55, 4).
 !coord(@55, 2, 15).
 heat(@55, 5.0).
+!inbound(@56, 4).
 !coord(@56, 2, 16).
 heat(@56, 5.0).
+!inbound(@57, 4).
 !coord(@57, 2, 17).
 heat(@57, 5.0).
+!inbound(@58, 4).
 !coord(@58, 2, 18).
 heat(@58, 5.0).
+!inbound(@59, 4).
 !coord(@59, 2, 19).
 heat(@59, 5.0).
+!inbound(@60, 4).
 !coord(@60, 3, 0).
 heat(@60, 5.0).
+!inbound(@61, 4).
 !coord(@61, 3, 1).
 heat(@61, 5.0).
+!inbound(@62, 4).
 !coord(@62, 3, 2).
 heat(@62, 5.0).
+!inbound(@63, 4).
 !coord(@63, 3, 3).
 heat(@63, 5.0).
+!inbound(@64, 4).
 !coord(@64, 3, 4).
 heat(@64, 5.0).
+!inbound(@65, 4).
 !coord(@65, 3, 5).
 heat(@65, 5.0).
+!inbound(@66, 4).
 !coord(@66, 3, 6).
 heat(@66, 5.0).
+!inbound(@67, 4).
 !coord(@67, 3, 7).
 heat(@67, 5.0).
+!inbound(@68, 4).
 !coord(@68, 3, 8).
 heat(@68, 5.0).
+!inbound(@69, 4).
 !coord(@69, 3, 9).
 heat(@69, 5.0).
+!inbound(@70, 4).
 !coord(@70, 3, 10).
 heat(@70, 5.0).
+!inbound(@71, 4).
 !coord(@71, 3, 11).
 heat(@71, 5.0).
+!inbound(@72, 4).
 !coord(@72, 3, 12).
 heat(@72, 5.0).
+!inbound(@73, 4).
 !coord(@73, 3, 13).
 heat(@73, 5.0).
+!inbound(@74, 4).
 !coord(@74, 3, 14).
 heat(@74, 5.0).
+!inbound(@75, 4).
 !coord(@75, 3, 15).
 heat(@75, 5.0).
+!inbound(@76, 4).
 !coord(@76, 3, 16).
 heat(@76, 5.0).
+!inbound(@77, 4).
 !coord(@77, 3, 17).
 heat(@77, 5.0).
+!inbound(@78, 4).
 !coord(@78, 3, 18).
 heat(@78, 5.0).
+!inbound(@79, 4).
 !coord(@79, 3, 19).
 heat(@79, 5.0).
+!inbound(@80, 4).
 !coord(@80, 4, 0).
 heat(@80, 5.0).
+!inbound(@81, 4).
 !coord(@81, 4, 1).
 heat(@81, 5.0).
+!inbound(@82, 4).
 !coord(@82, 4, 2).
 heat(@82, 5.0).
+!inbound(@83, 4).
 !coord(@83, 4, 3).
 heat(@83, 5.0).
+!inbound(@84, 4).
 !coord(@84, 4, 4).
 heat(@84, 5.0).
+!inbound(@85, 4).
 !coord(@85, 4, 5).
 heat(@85, 5.0).
+!inbound(@86, 4).
 !coord(@86, 4, 6).
 heat(@86, 5.0).
+!inbound(@87, 4).
 !coord(@87, 4, 7).
 heat(@87, 5.0).
+!inbound(@88, 4).
 !coord(@88, 4, 8).
 heat(@88, 5.0).
+!inbound(@89, 4).
 !coord(@89, 4, 9).
 heat(@89, 5.0).
+!inbound(@90, 4).
 !coord(@90, 4, 10).
 heat(@90, 5.0).
+!inbound(@91, 4).
 !coord(@91, 4, 11).
 heat(@91, 5.0).
+!inbound(@92, 4).
 !coord(@92, 4, 12).
 heat(@92, 5.0).
+!inbound(@93, 4).
 !coord(@93, 4, 13).
 heat(@93, 5.0).
+!inbound(@94, 4).
 !coord(@94, 4, 14).
 heat(@94, 5.0).
+!inbound(@95, 4).
 !coord(@95, 4, 15).
 heat(@95, 5.0).
+!inbound(@96, 4).
 !coord(@96, 4, 16).
 heat(@96, 5.0).
+!inbound(@97, 4).
 !coord(@97, 4, 17).
 heat(@97, 5.0).
+!inbound(@98, 4).
 !coord(@98, 4, 18).
 heat(@98, 5.0).
+!inbound(@99, 4).
 !coord(@99, 4, 19).
 heat(@99, 5.0).
+!inbound(@100, 4).
 !coord(@100, 5, 0).
 heat(@100, 5.0).
+!inbound(@101, 4).
 !coord(@101, 5, 1).
 heat(@101, 5.0).
+!inbound(@102, 4).
 !coord(@102, 5, 2).
 heat(@102, 5.0).
+!inbound(@103, 4).
 !coord(@103, 5, 3).
 heat(@103, 5.0).
+!inbound(@104, 4).
 !coord(@104, 5, 4).
 heat(@104, 5.0).
+!inbound(@105, 4).
 !coord(@105, 5, 5).
 heat(@105, 5.0).
+!inbound(@106, 4).
 !coord(@106, 5, 6).
 heat(@106, 5.0).
+!inbound(@107, 4).
 !coord(@107, 5, 7).
 heat(@107, 5.0).
+!inbound(@108, 4).
 !coord(@108, 5, 8).
 heat(@108, 5.0).
+!inbound(@109, 4).
 !coord(@109, 5, 9).
 heat(@109, 5.0).
+!inbound(@110, 4).
 !coord(@110, 5, 10).
 heat(@110, 5.0).
+!inbound(@111, 4).
 !coord(@111, 5, 11).
 heat(@111, 5.0).
+!inbound(@112, 4).
 !coord(@112, 5, 12).
 heat(@112, 5.0).
+!inbound(@113, 4).
 !coord(@113, 5, 13).
 heat(@113, 5.0).
+!inbound(@114, 4).
 !coord(@114, 5, 14).
 heat(@114, 5.0).
+!inbound(@115, 4).
 !coord(@115, 5, 15).
 heat(@115, 5.0).
+!inbound(@116, 4).
 !coord(@116, 5, 16).
 heat(@116, 5.0).
+!inbound(@117, 4).
 !coord(@117, 5, 17).
 heat(@117, 5.0).
+!inbound(@118, 4).
 !coord(@118, 5, 18).
 heat(@118, 5.0).
+!inbound(@119, 4).
 !coord(@119, 5, 19).
 heat(@119, 5.0).
+!inbound(@120, 4).
 !coord(@120, 6, 0).
 heat(@120, 5.0).
+!inbound(@121, 4).
 !coord(@121, 6, 1).
 heat(@121, 5.0).
+!inbound(@122, 4).
 !coord(@122, 6, 2).
 heat(@122, 5.0).
+!inbound(@123, 4).
 !coord(@123, 6, 3).
 heat(@123, 5.0).
+!inbound(@124, 4).
 !coord(@124, 6, 4).
 heat(@124, 5.0).
+!inbound(@125, 4).
 !coord(@125, 6, 5).
 heat(@125, 5.0).
+!inbound(@126, 4).
 !coord(@126, 6, 6).
 heat(@126, 5.0).
+!inbound(@127, 4).
 !coord(@127, 6, 7).
 heat(@127, 5.0).
+!inbound(@128, 4).
 !coord(@128, 6, 8).
 heat(@128, 5.0).
+!inbound(@129, 4).
 !coord(@129, 6, 9).
 heat(@129, 5.0).
+!inbound(@130, 4).
 !coord(@130, 6, 10).
 heat(@130, 5.0).
+!inbound(@131, 4).
 !coord(@131, 6, 11).
 heat(@131, 5.0).
+!inbound(@132, 4).
 !coord(@132, 6, 12).
 heat(@132, 5.0).
+!inbound(@133, 4).
 !coord(@133, 6, 13).
 heat(@133, 5.0).
+!inbound(@134, 4).
 !coord(@134, 6, 14).
 heat(@134, 5.0).
+!inbound(@135, 4).
 !coord(@135, 6, 15).
 heat(@135, 5.0).
+!inbound(@136, 4).
 !coord(@136, 6, 16).
 heat(@136, 5.0).
+!inbound(@137, 4).
 !coord(@137, 6, 17).
 heat(@137, 5.0).
+!inbound(@138, 4).
 !coord(@138, 6, 18).
 heat(@138, 5.0).
+!inbound(@139, 4).
 !coord(@139, 6, 19).
 heat(@139, 5.0).
+!inbound(@140, 4).
 !coord(@140, 7, 0).
 heat(@140, 5.0).
+!inbound(@141, 4).
 !coord(@141, 7, 1).
 heat(@141, 5.0).
+!inbound(@142, 4).
 !coord(@142, 7, 2).
 heat(@142, 5.0).
+!inbound(@143, 4).
 !coord(@143, 7, 3).
 heat(@143, 5.0).
+!inbound(@144, 4).
 !coord(@144, 7, 4).
 heat(@144, 5.0).
+!inbound(@145, 4).
 !coord(@145, 7, 5).
 heat(@145, 5.0).
+!inbound(@146, 4).
 !coord(@146, 7, 6).
 heat(@146, 5.0).
+!inbound(@147, 4).
 !coord(@147, 7, 7).
 !inner(@147).
 heat(@147, 100.0).
+!inbound(@148, 4).
 !coord(@148, 7, 8).
 !inner(@148).
 heat(@148, 100.0).
+!inbound(@149, 4).
 !coord(@149, 7, 9).
 !inner(@149).
 heat(@149, 100.0).
+!inbound(@150, 4).
 !coord(@150, 7, 10).
 !inner(@150).
 heat(@150, 100.0).
+!inbound(@151, 4).
 !coord(@151, 7, 11).
 !inner(@151).
 heat(@151, 100.0).
+!inbound(@152, 4).
 !coord(@152, 7, 12).
 !inner(@152).
 heat(@152, 100.0).
+!inbound(@153, 4).
 !coord(@153, 7, 13).
 heat(@153, 5.0).
+!inbound(@154, 4).
 !coord(@154, 7, 14).
 heat(@154, 5.0).
+!inbound(@155, 4).
 !coord(@155, 7, 15).
 heat(@155, 5.0).
+!inbound(@156, 4).
 !coord(@156, 7, 16).
 heat(@156, 5.0).
+!inbound(@157, 4).
 !coord(@157, 7, 17).
 heat(@157, 5.0).
+!inbound(@158, 4).
 !coord(@158, 7, 18).
 heat(@158, 5.0).
+!inbound(@159, 4).
 !coord(@159, 7, 19).
 heat(@159, 5.0).
+!inbound(@160, 4).
 !coord(@160, 8, 0).
 heat(@160, 5.0).
+!inbound(@161, 4).
 !coord(@161, 8, 1).
 heat(@161, 5.0).
+!inbound(@162, 4).
 !coord(@162, 8, 2).
 heat(@162, 5.0).
+!inbound(@163, 4).
 !coord(@163, 8, 3).
 heat(@163, 5.0).
+!inbound(@164, 4).
 !coord(@164, 8, 4).
 heat(@164, 5.0).
+!inbound(@165, 4).
 !coord(@165, 8, 5).
 heat(@165, 5.0).
+!inbound(@166, 4).
 !coord(@166, 8, 6).
 heat(@166, 5.0).
+!inbound(@167, 4).
 !coord(@167, 8, 7).
 !inner(@167).
 heat(@167, 100.0).
+!inbound(@168, 4).
 !coord(@168, 8, 8).
 !inner(@168).
 heat(@168, 100.0).
+!inbound(@169, 4).
 !coord(@169, 8, 9).
 !inner(@169).
 heat(@169, 100.0).
+!inbound(@170, 4).
 !coord(@170, 8, 10).
 !inner(@170).
 heat(@170, 100.0).
+!inbound(@171, 4).
 !coord(@171, 8, 11).
 !inner(@171).
 heat(@171, 100.0).
+!inbound(@172, 4).
 !coord(@172, 8, 12).
 !inner(@172).
 heat(@172, 100.0).
+!inbound(@173, 4).
 !coord(@173, 8, 13).
 heat(@173, 5.0).
+!inbound(@174, 4).
 !coord(@174, 8, 14).
 heat(@174, 5.0).
+!inbound(@175, 4).
 !coord(@175, 8, 15).
 heat(@175, 5.0).
+!inbound(@176, 4).
 !coord(@176, 8, 16).
 heat(@176, 5.0).
+!inbound(@177, 4).
 !coord(@177, 8, 17).
 heat(@177, 5.0).
+!inbound(@178, 4).
 !coord(@178, 8, 18).
 heat(@178, 5.0).
+!inbound(@179, 4).
 !coord(@179, 8, 19).
 heat(@179, 5.0).
+!inbound(@180, 4).
 !coord(@180, 9, 0).
 heat(@180, 5.0).
+!inbound(@181, 4).
 !coord(@181, 9, 1).
 heat(@181, 5.0).
+!inbound(@182, 4).
 !coord(@182, 9, 2).
 heat(@182, 5.0).
+!inbound(@183, 4).
 !coord(@183, 9, 3).
 heat(@183, 5.0).
+!inbound(@184, 4).
 !coord(@184, 9, 4).
 heat(@184, 5.0).
+!inbound(@185, 4).
 !coord(@185, 9, 5).
 heat(@185, 5.0).
+!inbound(@186, 4).
 !coord(@186, 9, 6).
 heat(@186, 5.0).
+!inbound(@187, 4).
 !coord(@187, 9, 7).
 !inner(@187).
 heat(@187, 100.0).
+!inbound(@188, 4).
 !coord(@188, 9, 8).
 !inner(@188).
 heat(@188, 100.0).
+!inbound(@189, 4).
 !coord(@189, 9, 9).
 !inner(@189).
 heat(@189, 100.0).
+!inbound(@190, 4).
 !coord(@190, 9, 10).
 !inner(@190).
 heat(@190, 100.0).
+!inbound(@191, 4).
 !coord(@191, 9, 11).
 !inner(@191).
 heat(@191, 100.0).
+!inbound(@192, 4).
 !coord(@192, 9, 12).
 !inner(@192).
 heat(@192, 100.0).
+!inbound(@193, 4).
 !coord(@193, 9, 13).
 heat(@193, 5.0).
+!inbound(@194, 4).
 !coord(@194, 9, 14).
 heat(@194, 5.0).
+!inbound(@195, 4).
 !coord(@195, 9, 15).
 heat(@195, 5.0).
+!inbound(@196, 4).
 !coord(@196, 9, 16).
 heat(@196, 5.0).
+!inbound(@197, 4).
 !coord(@197, 9, 17).
 heat(@197, 5.0).
+!inbound(@198, 4).
 !coord(@198, 9, 18).
 heat(@198, 5.0).
+!inbound(@199, 4).
 !coord(@199, 9, 19).
 heat(@199, 5.0).
+!inbound(@200, 4).
 !coord(@200, 10, 0).
 heat(@200, 5.0).
+!inbound(@201, 4).
 !coord(@201, 10, 1).
 heat(@201, 5.0).
+!inbound(@202, 4).
 !coord(@202, 10, 2).
 heat(@202, 5.0).
+!inbound(@203, 4).
 !coord(@203, 10, 3).
 heat(@203, 5.0).
+!inbound(@204, 4).
 !coord(@204, 10, 4).
 heat(@204, 5.0).
+!inbound(@205, 4).
 !coord(@205, 10, 5).
 heat(@205, 5.0).
+!inbound(@206, 4).
 !coord(@206, 10, 6).
 heat(@206, 5.0).
+!inbound(@207, 4).
 !coord(@207, 10, 7).
 !inner(@207).
 heat(@207, 100.0).
+!inbound(@208, 4).
 !coord(@208, 10, 8).
 !inner(@208).
 heat(@208, 100.0).
+!inbound(@209, 4).
 !coord(@209, 10, 9).
 !inner(@209).
 heat(@209, 100.0).
+!inbound(@210, 4).
 !coord(@210, 10, 10).
 !inner(@210).
 heat(@210, 100.0).
+!inbound(@211, 4).
 !coord(@211, 10, 11).
 !inner(@211).
 heat(@211, 100.0).
+!inbound(@212, 4).
 !coord(@212, 10, 12).
 !inner(@212).
 heat(@212, 100.0).
+!inbound(@213, 4).
 !coord(@213, 10, 13).
 heat(@213, 5.0).
+!inbound(@214, 4).
 !coord(@214, 10, 14).
 heat(@214, 5.0).
+!inbound(@215, 4).
 !coord(@215, 10, 15).
 heat(@215, 5.0).
+!inbound(@216, 4).
 !coord(@216, 10, 16).
 heat(@216, 5.0).
+!inbound(@217, 4).
 !coord(@217, 10, 17).
 heat(@217, 5.0).
+!inbound(@218, 4).
 !coord(@218, 10, 18).
 heat(@218, 5.0).
+!inbound(@219, 4).
 !coord(@219, 10, 19).
 heat(@219, 5.0).
+!inbound(@220, 4).
 !coord(@220, 11, 0).
 heat(@220, 5.0).
+!inbound(@221, 4).
 !coord(@221, 11, 1).
 heat(@221, 5.0).
+!inbound(@222, 4).
 !coord(@222, 11, 2).
 heat(@222, 5.0).
+!inbound(@223, 4).
 !coord(@223, 11, 3).
 heat(@223, 5.0).
+!inbound(@224, 4).
 !coord(@224, 11, 4).
 heat(@224, 5.0).
+!inbound(@225, 4).
 !coord(@225, 11, 5).
 heat(@225, 5.0).
+!inbound(@226, 4).
 !coord(@226, 11, 6).
 heat(@226, 5.0).
+!inbound(@227, 4).
 !coord(@227, 11, 7).
 !inner(@227).
 heat(@227, 100.0).
+!inbound(@228, 4).
 !coord(@228, 11, 8).
 !inner(@228).
 heat(@228, 100.0).
+!inbound(@229, 4).
 !coord(@229, 11, 9).
 !inner(@229).
 heat(@229, 100.0).
+!inbound(@230, 4).
 !coord(@230, 11, 10).
 !inner(@230).
 heat(@230, 100.0).
+!inbound(@231, 4).
 !coord(@231, 11, 11).
 !inner(@231).
 heat(@231, 100.0).
+!inbound(@232, 4).
 !coord(@232, 11, 12).
 !inner(@232).
 heat(@232, 100.0).
+!inbound(@233, 4).
 !coord(@233, 11, 13).
 heat(@233, 5.0).
+!inbound(@234, 4).
 !coord(@234, 11, 14).
 heat(@234, 5.0).
+!inbound(@235, 4).
 !coord(@235, 11, 15).
 heat(@235, 5.0).
+!inbound(@236, 4).
 !coord(@236, 11, 16).
 heat(@236, 5.0).
+!inbound(@237, 4).
 !coord(@237, 11, 17).
 heat(@237, 5.0).
+!inbound(@238, 4).
 !coord(@238, 11, 18).
 heat(@238, 5.0).
+!inbound(@239, 4).
 !coord(@239, 11, 19).
 heat(@239, 5.0).
+!inbound(@240, 4).
 !coord(@240, 12, 0).
 heat(@240, 5.0).
+!inbound(@241, 4).
 !coord(@241, 12, 1).
 heat(@241, 5.0).
+!inbound(@242, 4).
 !coord(@242, 12, 2).
 heat(@242, 5.0).
+!inbound(@243, 4).
 !coord(@243, 12, 3).
 heat(@243, 5.0).
+!inbound(@244, 4).
 !coord(@244, 12, 4).
 heat(@244, 5.0).
+!inbound(@245, 4).
 !coord(@245, 12, 5).
 heat(@245, 5.0).
+!inbound(@246, 4).
 !coord(@246, 12, 6).
 heat(@246, 5.0).
+!inbound(@247, 4).
 !coord(@247, 12, 7).
 !inner(@247).
 heat(@247, 100.0).
+!inbound(@248, 4).
 !coord(@248, 12, 8).
 !inner(@248).
 heat(@248, 100.0).
+!inbound(@249, 4).
 !coord(@249, 12, 9).
 !inner(@249).
 heat(@249, 100.0).
+!inbound(@250, 4).
 !coord(@250, 12, 10).
 !inner(@250).
 heat(@250, 100.0).
+!inbound(@251, 4).
 !coord(@251, 12, 11).
 !inner(@251).
 heat(@251, 100.0).
+!inbound(@252, 4).
 !coord(@252, 12, 12).
 !inner(@252).
 heat(@252, 100.0).
+!inbound(@253, 4).
 !coord(@253, 12, 13).
 heat(@253, 5.0).
+!inbound(@254, 4).
 !coord(@254, 12, 14).
 heat(@254, 5.0).
+!inbound(@255, 4).
 !coord(@255, 12, 15).
 heat(@255, 5.0).
+!inbound(@256, 4).
 !coord(@256, 12, 16).
 heat(@256, 5.0).
+!inbound(@257, 4).
 !coord(@257, 12, 17).
 heat(@257, 5.0).
+!inbound(@258, 4).
 !coord(@258, 12, 18).
 heat(@258, 5.0).
+!inbound(@259, 4).
 !coord(@259, 12, 19).
 heat(@259, 5.0).
+!inbound(@260, 4).
 !coord(@260, 13, 0).
 heat(@260, 5.0).
+!inbound(@261, 4).
 !coord(@261, 13, 1).
 heat(@261, 5.0).
+!inbound(@262, 4).
 !coord(@262, 13, 2).
 heat(@262, 5.0).
+!inbound(@263, 4).
 !coord(@263, 13, 3).
 heat(@263, 5.0).
+!inbound(@264, 4).
 !coord(@264, 13, 4).
 heat(@264, 5.0).
+!inbound(@265, 4).
 !coord(@265, 13, 5).
 heat(@265, 5.0).
+!inbound(@266, 4).
 !coord(@266, 13, 6).
 heat(@266, 5.0).
+!inbound(@267, 4).
 !coord(@267, 13, 7).
 heat(@267, 5.0).
+!inbound(@268, 4).
 !coord(@268, 13, 8).
 heat(@268, 5.0).
+!inbound(@269, 4).
 !coord(@269, 13, 9).
 heat(@269, 5.0).
+!inbound(@270, 4).
 !coord(@270, 13, 10).
 heat(@270, 5.0).
+!inbound(@271, 4).
 !coord(@271, 13, 11).
 heat(@271, 5.0).
+!inbound(@272, 4).
 !coord(@272, 13, 12).
 heat(@272, 5.0).
+!inbound(@273, 4).
 !coord(@273, 13, 13).
 heat(@273, 5.0).
+!inbound(@274, 4).
 !coord(@274, 13, 14).
 heat(@274, 5.0).
+!inbound(@275, 4).
 !coord(@275, 13, 15).
 heat(@275, 5.0).
+!inbound(@276, 4).
 !coord(@276, 13, 16).
 heat(@276, 5.0).
+!inbound(@277, 4).
 !coord(@277, 13, 17).
 heat(@277, 5.0).
+!inbound(@278, 4).
 !coord(@278, 13, 18).
 heat(@278, 5.0).
+!inbound(@279, 4).
 !coord(@279, 13, 19).
 heat(@279, 5.0).
+!inbound(@280, 4).
 !coord(@280, 14, 0).
 heat(@280, 5.0).
+!inbound(@281, 4).
 !coord(@281, 14, 1).
 heat(@281, 5.0).
+!inbound(@282, 4).
 !coord(@282, 14, 2).
 heat(@282, 5.0).
+!inbound(@283, 4).
 !coord(@283, 14, 3).
 heat(@283, 5.0).
+!inbound(@284, 4).
 !coord(@284, 14, 4).
 heat(@284, 5.0).
+!inbound(@285, 4).
 !coord(@285, 14, 5).
 heat(@285, 5.0).
+!inbound(@286, 4).
 !coord(@286, 14, 6).
 heat(@286, 5.0).
+!inbound(@287, 4).
 !coord(@287, 14, 7).
 heat(@287, 5.0).
+!inbound(@288, 4).
 !coord(@288, 14, 8).
 heat(@288, 5.0).
+!inbound(@289, 4).
 !coord(@289, 14, 9).
 heat(@289, 5.0).
+!inbound(@290, 4).
 !coord(@290, 14, 10).
 heat(@290, 5.0).
+!inbound(@291, 4).
 !coord(@291, 14, 11).
 heat(@291, 5.0).
+!inbound(@292, 4).
 !coord(@292, 14, 12).
 heat(@292, 5.0).
+!inbound(@293, 4).
 !coord(@293, 14, 13).
 heat(@293, 5.0).
+!inbound(@294, 4).
 !coord(@294, 14, 14).
 heat(@294, 5.0).
+!inbound(@295, 4).
 !coord(@295, 14, 15).
 heat(@295, 5.0).
+!inbound(@296, 4).
 !coord(@296, 14, 16).
 heat(@296, 5.0).
+!inbound(@297, 4).
 !coord(@297, 14, 17).
 heat(@297, 5.0).
+!inbound(@298, 4).
 !coord(@298, 14, 18).
 heat(@298, 5.0).
+!inbound(@299, 4).
 !coord(@299, 14, 19).
 heat(@299, 5.0).
+!inbound(@300, 4).
 !coord(@300, 15, 0).
 heat(@300, 5.0).
+!inbound(@301, 4).
 !coord(@301, 15, 1).
 heat(@301, 5.0).
+!inbound(@302, 4).
 !coord(@302, 15, 2).
 heat(@302, 5.0).
+!inbound(@303, 4).
 !coord(@303, 15, 3).
 heat(@303, 5.0).
+!inbound(@304, 4).
 !coord(@304, 15, 4).
 heat(@304, 5.0).
+!inbound(@305, 4).
 !coord(@305, 15, 5).
 heat(@305, 5.0).
+!inbound(@306, 4).
 !coord(@306, 15, 6).
 heat(@306, 5.0).
+!inbound(@307, 4).
 !coord(@307, 15, 7).
 heat(@307, 5.0).
+!inbound(@308, 4).
 !coord(@308, 15, 8).
 heat(@308, 5.0).
+!inbound(@309, 4).
 !coord(@309, 15, 9).
 heat(@309, 5.0).
+!inbound(@310, 4).
 !coord(@310, 15, 10).
 heat(@310, 5.0).
+!inbound(@311, 4).
 !coord(@311, 15, 11).
 heat(@311, 5.0).
+!inbound(@312, 4).
 !coord(@312, 15, 12).
 heat(@312, 5.0).
+!inbound(@313, 4).
 !coord(@313, 15, 13).
 heat(@313, 5.0).
+!inbound(@314, 4).
 !coord(@314, 15, 14).
 heat(@314, 5.0).
+!inbound(@315, 4).
 !coord(@315, 15, 15).
 heat(@315, 5.0).
+!inbound(@316, 4).
 !coord(@316, 15, 16).
 heat(@316, 5.0).
+!inbound(@317, 4).
 !coord(@317, 15, 17).
 heat(@317, 5.0).
+!inbound(@318, 4).
 !coord(@318, 15, 18).
 heat(@318, 5.0).
+!inbound(@319, 4).
 !coord(@319, 15, 19).
 heat(@319, 5.0).
+!inbound(@320, 4).
 !coord(@320, 16, 0).
 heat(@320, 5.0).
+!inbound(@321, 4).
 !coord(@321, 16, 1).
 heat(@321, 5.0).
+!inbound(@322, 4).
 !coord(@322, 16, 2).
 heat(@322, 5.0).
+!inbound(@323, 4).
 !coord(@323, 16, 3).
 heat(@323, 5.0).
+!inbound(@324, 4).
 !coord(@324, 16, 4).
 heat(@324, 5.0).
+!inbound(@325, 4).
 !coord(@325, 16, 5).
 heat(@325, 5.0).
+!inbound(@326, 4).
 !coord(@326, 16, 6).
 heat(@326, 5.0).
+!inbound(@327, 4).
 !coord(@327, 16, 7).
 heat(@327, 5.0).
+!inbound(@328, 4).
 !coord(@328, 16, 8).
 heat(@328, 5.0).
+!inbound(@329, 4).
 !coord(@329, 16, 9).
 heat(@329, 5.0).
+!inbound(@330, 4).
 !coord(@330, 16, 10).
 heat(@330, 5.0).
+!inbound(@331, 4).
 !coord(@331, 16, 11).
 heat(@331, 5.0).
+!inbound(@332, 4).
 !coord(@332, 16, 12).
 heat(@332, 5.0).
+!inbound(@333, 4).
 !coord(@333, 16, 13).
 heat(@333, 5.0).
+!inbound(@334, 4).
 !coord(@334, 16, 14).
 heat(@334, 5.0).
+!inbound(@335, 4).
 !coord(@335, 16, 15).
 heat(@335, 5.0).
+!inbound(@336, 4).
 !coord(@336, 16, 16).
 heat(@336, 5.0).
+!inbound(@337, 4).
 !coord(@337, 16, 17).
 heat(@337, 5.0).
+!inbound(@338, 4).
 !coord(@338, 16, 18).
 heat(@338, 5.0).
+!inbound(@339, 4).
 !coord(@339, 16, 19).
 heat(@339, 5.0).
+!inbound(@340, 4).
 !coord(@340, 17, 0).
 heat(@340, 5.0).
+!inbound(@341, 4).
 !coord(@341, 17, 1).
 heat(@341, 5.0).
+!inbound(@342, 4).
 !coord(@342, 17, 2).
 heat(@342, 5.0).
+!inbound(@343, 4).
 !coord(@343, 17, 3).
 heat(@343, 5.0).
+!inbound(@344, 4).
 !coord(@344, 17, 4).
 heat(@344, 5.0).
+!inbound(@345, 4).
 !coord(@345, 17, 5).
 heat(@345, 5.0).
+!inbound(@346, 4).
 !coord(@346, 17, 6).
 heat(@346, 5.0).
+!inbound(@347, 4).
 !coord(@347, 17, 7).
 heat(@347, 5.0).
+!inbound(@348, 4).
 !coord(@348, 17, 8).
 heat(@348, 5.0).
+!inbound(@349, 4).
 !coord(@349, 17, 9).
 heat(@349, 5.0).
+!inbound(@350, 4).
 !coord(@350, 17, 10).
 heat(@350, 5.0).
+!inbound(@351, 4).
 !coord(@351, 17, 11).
 heat(@351, 5.0).
+!inbound(@352, 4).
 !coord(@352, 17, 12).
 heat(@352, 5.0).
+!inbound(@353, 4).
 !coord(@353, 17, 13).
 heat(@353, 5.0).
+!inbound(@354, 4).
 !coord(@354, 17, 14).
 heat(@354, 5.0).
+!inbound(@355, 4).
 !coord(@355, 17, 15).
 heat(@355, 5.0).
+!inbound(@356, 4).
 !coord(@356, 17, 16).
 heat(@356, 5.0).
+!inbound(@357, 4).
 !coord(@357, 17, 17).
 heat(@357, 5.0).
+!inbound(@358, 4).
 !coord(@358, 17, 18).
 heat(@358, 5.0).
+!inbound(@359, 4).
 !coord(@359, 17, 19).
 heat(@359, 5.0).
+!inbound(@360, 4).
 !coord(@360, 18, 0).
 heat(@360, 5.0).
+!inbound(@361, 4).
 !coord(@361, 18, 1).
 heat(@361, 5.0).
+!inbound(@362, 4).
 !coord(@362, 18, 2).
 heat(@362, 5.0).
+!inbound(@363, 4).
 !coord(@363, 18, 3).
 heat(@363, 5.0).
+!inbound(@364, 4).
 !coord(@364, 18, 4).
 heat(@364, 5.0).
+!inbound(@365, 4).
 !coord(@365, 18, 5).
 heat(@365, 5.0).
+!inbound(@366, 4).
 !coord(@366, 18, 6).
 heat(@366, 5.0).
+!inbound(@367, 4).
 !coord(@367, 18, 7).
 heat(@367, 5.0).
+!inbound(@368, 4).
 !coord(@368, 18, 8).
 heat(@368, 5.0).
+!inbound(@369, 4).
 !coord(@369, 18, 9).
 heat(@369, 5.0).
+!inbound(@370, 4).
 !coord(@370, 18, 10).
 heat(@370, 5.0).
+!inbound(@371, 4).
 !coord(@371, 18, 11).
 heat(@371, 5.0).
+!inbound(@372, 4).
 !coord(@372, 18, 12).
 heat(@372, 5.0).
+!inbound(@373, 4).
 !coord(@373, 18, 13).
 heat(@373, 5.0).
+!inbound(@374, 4).
 !coord(@374, 18, 14).
 heat(@374, 5.0).
+!inbound(@375, 4).
 !coord(@375, 18, 15).
 heat(@375, 5.0).
+!inbound(@376, 4).
 !coord(@376, 18, 16).
 heat(@376, 5.0).
+!inbound(@377, 4).
 !coord(@377, 18, 17).
 heat(@377, 5.0).
+!inbound(@378, 4).
 !coord(@378, 18, 18).
 heat(@378, 5.0).
+!inbound(@379, 4).
 !coord(@379, 18, 19).
 heat(@379, 5.0).
+!inbound(@380, 4).
 !coord(@380, 19, 0).
 heat(@380, 5.0).
+!inbound(@381, 4).
 !coord(@381, 19, 1).
 heat(@381, 5.0).
+!inbound(@382, 4).
 !coord(@382, 19, 2).
 heat(@382, 5.0).
+!inbound(@383, 4).
 !coord(@383, 19, 3).
 heat(@383, 5.0).
+!inbound(@384, 4).
 !coord(@384, 19, 4).
 heat(@384, 5.0).
+!inbound(@385, 4).
 !coord(@385, 19, 5).
 heat(@385, 5.0).
+!inbound(@386, 4).
 !coord(@386, 19, 6).
 heat(@386, 5.0).
+!inbound(@387, 4).
 !coord(@387, 19, 7).
 heat(@387, 5.0).
+!inbound(@388, 4).
 !coord(@388, 19, 8).
 heat(@388, 5.0).
+!inbound(@389, 4).
 !coord(@389, 19, 9).
 heat(@389, 5.0).
+!inbound(@390, 4).
 !coord(@390, 19, 10).
 heat(@390, 5.0).
+!inbound(@391, 4).
 !coord(@391, 19, 11).
 heat(@391, 5.0).
+!inbound(@392, 4).
 !coord(@392, 19, 12).
 heat(@392, 5.0).
+!inbound(@393, 4).
 !coord(@393, 19, 13).
 heat(@393, 5.0).
+!inbound(@394, 4).
 !coord(@394, 19, 14).
 heat(@394, 5.0).
+!inbound(@395, 4).
 !coord(@395, 19, 15).
 heat(@395, 5.0).
+!inbound(@396, 4).
 !coord(@396, 19, 16).
 heat(@396, 5.0).
+!inbound(@397, 4).
 !coord(@397, 19, 17).
 heat(@397, 5.0).
+!inbound(@398, 4).
 !coord(@398, 19, 18).
 heat(@398, 5.0).
+!inbound(@399, 4).
 !coord(@399, 19, 19).
 heat(@399, 5.0).
 !edge(@0,@20,0.800000).
