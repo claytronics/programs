@@ -1,82 +1,88 @@
-/* naive loopy belief propagation */
+/* Loopy belief propagation was it is done in GraphLab */
 
-type route edge(node, node).
-type coord(node, int).
+type route edge(node, node, int).
 type potential(node, list float).
-type globalpotential(node, list float).
-type linear belief(node, list float, int, int).
-type linear message(node, node, list float, int).
-type linear messagefrom(node, node, list float, int).
-type linear oldmessagefrom(node, node, list float, int).
-type linear messageto(node, node, list float, int).
-type linear accumulator(node, int, list float, int).
-type neighbors(node, int).
+type pixel(node, int, int).
 
-const startbel = [-1.609438, -1.609438, -1.609438, -1.609438, -1.609438].
-const startmsg = [-1.609438, -1.609438, -1.609438, -1.609438, -1.609438].
-const iterations = 100.
+type linear belief(node, list float).
+type linear new-neighbor-belief(node, node, list float). // neighbor sent an update
+type linear sent-neighbor-belief(node, node, list float). // what we sent previously
+type linear neighbor-belief(node, node, list float). // current neighbor belief
+type linear neighbor-belief-copy(node, list float).
+type linear neighbor-belief-old(node, node, list float).
+
+type linear start(node).
+type linear update(node).
+type linear copy-messages(node).
+type linear sum-messages(node, list float).
+type linear update-messages(node, list float).
+type linear check-residual(node, node, float, list float).
+
+const global-potential =  [-0.0, -2.0, -4, -6, -8, -2, -0, -2, -4, -6, -4, -2, -0, -2, -4, -6, -4, -2, -0, -2, -8, -6, -4, -2, -0].
+const initial-message = [-1.60944, -1.60944, -1.60944, -1.60944, -1.60944].
 const damping = 0.1.
+const bound = 0.0001.
+//const bound = str2float(@arg1).
+const top = 0.
+const bottom = 1.
+const left = 2.
+const right = 3.
 
-message(A, B, startmsg, 0) :- !edge(A, B).
-!globalpotential(A, [-0.000000, -10.000000, -20.000000, -30.000000, -40.000000, -10.000000, -0.000000, -10.000000, -20.000000, -30.000000, -20.000000, -10.000000, -0.000000, -10.000000, -20.000000, -30.000000, -20.000000, -10.000000, -0.000000, -10.000000, -40.000000, -30.000000, -20.000000, -10.000000, -0.000000]).
-!coord(@0, 0).
-!potential(@0, [-0.979456, -1.191881, -1.654306, -2.366730, -3.329155]).
-!coord(@1, 1).
-!potential(@1, [-2.637754, -1.929670, -1.471586, -1.263503, -1.305419]).
-!coord(@2, 2).
-!potential(@2, [-1.424627, -1.304458, -1.434290, -1.814122, -2.443954]).
-!coord(@3, 3).
-!potential(@3, [-2.426489, -1.803904, -1.431318, -1.308732, -1.436146]).
-!edge(@0, @1).
-!edge(@1, @0).
-!edge(@1, @3).
-!edge(@3, @1).
-!edge(@2, @3).
-!edge(@3, @2).
-!edge(@0, @2).
-!edge(@2, @0).
+start(A).
 
-!neighbors(@0, 2).
-!neighbors(@1, 2).
-!neighbors(@2, 2).
-!neighbors(@3, 2).
-!neighbors(A, T) -o accumulator(A, T, [0.0, 0.0, 0.0, 0.0, 0.0], 0).
+// setups initial node belief and some other things
+start(A) -o belief(A, [-1.60944, -1.60944, -1.60944, -1.60944, -1.60944]),
+            {B, Side | !edge(A, B, Side) | neighbor-belief(A, B, initial-message),
+                               sent-neighbor-belief(A, B, initial-message)},
+            update(A).
 
-message(A, B, L, Id),
-edge(A, B),
-Id < (iterations - 1)
-	-o messagefrom(B, A, L, Id), messageto(A, B, L, Id).
+// if we have two update functions, just run one of them
+update(A), update(A) -o update(A).
 
-accumulator(A, 0, LF, Id),
-!potential(A, P),
-!neighbors(A, T),
-Id <= iterations
-	-o belief(A, normalize(addfloatlists(LF, P)), T, Id + 1),
-		accumulator(A, T, [0.0, 0.0, 0.0, 0.0, 0.0], Id + 1).
+// new neighbor beliefs
+neighbor-belief(A, B, Belief),
+new-neighbor-belief(A, B, NewBelief)
+   -o neighbor-belief(A, B, NewBelief).
 
-messagefrom(A, B, L, Id),
-accumulator(A, T, LF, Id),
-T > 0
-	-o accumulator(A, T - 1, addfloatlists(LF, L), Id),
-	   oldmessagefrom(A, B, L, Id).
+// make a copy of neighbors beliefs in order to add them up
+copy-messages(A),
+!potential(A, Potential),
+belief(A, MyBelief)
+   -o {B, Belief | neighbor-belief(A, B, Belief) | neighbor-belief-old(A, B, Belief), neighbor-belief-copy(A, Belief), neighbor-belief(A, B, Belief)},
+      sum-messages(A, Potential).
 
-belief(A, _, 0, Id),
-Id < (iterations - 1)
-	-o .
+// ... adding them up
+sum-messages(A, L1),
+neighbor-belief-copy(A, L2)
+   -o sum-messages(A, addfloatlists(L1, L2)).
 
-message(A, _, _, Id),
-Id = (iterations - 1)
-	-o .
+// ... no more beliefs to add
+sum-messages(A, NewBelief),
+Normalized = normalize(NewBelief)
+   -o update-messages(A, Normalized), belief(A, Normalized).
 
-belief(A, Belief, Total, Id1),
-Total > 0,
-Id1 = Id + 1,
-!globalpotential(A, GP),
-!edge(A, B),
-messageto(A, B, OldOut, Id),
-oldmessagefrom(A, B, OldIn, Id),
-Cavity = normalize(divide(Belief, OldIn)),
-Convolved = normalize(convolve(GP, Cavity))
-	-o message(A, B, damp(Convolved, OldOut, damping), Id1),
-		belief(A, Belief, Total - 1, Id1).
+// checks residual for setting priorities
+check-residual(A, B, Delta, OutMessage),
+!edge(A, B, _),
+Delta > bound
+   -o update(B), new-neighbor-belief(B, A, OutMessage).
+check-residual(A, B, Delta, OutMessage), !edge(A, B, _) -o new-neighbor-belief(B, A, OutMessage).
+
+// update belief to be sent to one neighbor
+update-messages(A, NewBelief),
+!edge(A, B, _),
+neighbor-belief-old(A, B, OldIn),
+sent-neighbor-belief(A, B, OldOut),
+Cavity = normalize(divide(NewBelief, OldIn)),
+Convolved = normalize(convolve(global-potential, Cavity)),
+OutMessage = damp(Convolved, OldOut, damping)
+   -o sent-neighbor-belief(A, B, OutMessage),
+      check-residual(A, B, residual(OutMessage, OldOut), OutMessage),
+      update-messages(A, NewBelief).
+
+// all beliefs were sent!
+update-messages(A, NewBelief) -o 1.
+
+// this starts the update process
+update(A) -o copy-messages(A).
 
