@@ -1,6 +1,7 @@
 /* computes the shortest path between 'finalnode' and 'startnode' */
-   
-type linear path(node, int, int).
+/* (cl-meld:meld-compile "/home/bourgeois/programs/shortest-path/shortest-path.meld" "/home/bourgeois/programs/shortest-path/shortest-path") */
+
+type path(node, int, int).
 type route edge(node, node, int).
 
 priority path/2 @asc.
@@ -11,9 +12,9 @@ const used = 1.
 const notused = 0.
 
 !edge(@1, @2, 1).
-!edge(@2, @4, 3).
+!edge(@2, @4, 1).
 !edge(@2, @3, 1).
-!edge(@3, @4, 2).
+!edge(@3, @4, 1).
 
 path(finalnode, 0, 0).
 

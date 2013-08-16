@@ -1,22 +1,43 @@
 /* Lamport mutual exclusion Meld version */
+/* Uses linear logic */
+/* Author: J. Bourgeois and F. Cruz */
+/* (cl-meld:meld-compile "/home/bourgeois/programs/mutual-exclusion/lamport.meld" "/home/bourgeois/programs/mutual-exclusion/lamport") */
+
+/* Status: draft */
 
 type route edge(node, node).
+
+/* Lamport clocks management */
 type linear update-time(node, int, int).
 type linear my-time(node, int).
-type linear add-request(node, int).
-type linear add-queue(node, queue, tuple).
-type linear ack(node, node, int).
-type linear remove-request(node, int).
-type linear remove-queue(node, queue, tuple).
+
+/* Requests management */
+type linear add-request(node, node, int).
+type linear remove-request(node, node, int).
 type linear request-ressource(node).
 type linear ressource-requested(node).
+type linear min-request(node, node, int).
+type linear select-min-request(node).
+
+/* Ack management */
+type linear ack(node, node, int).
 type linear select-min-ack(node).
-type linear min-ack(node,int).
-type linear CS(node).
-type linear CS_instructions(node).
+type linear minAck(node, int).
+type linear receive-ack(node, node, int).
+type linear ack2send(node, node).
+
+/* Counter needed to ensure that we received all the acks */
 type linear countdown(node, int).
 type counter(node, int).
-type queue(node, list node, list int).
+type linear start(node).
+
+/* Critical section */
+type linear cs(node, int).
+type cs-instructions(node).
+
+/* Data structure for the requests */
+type linear bag(node, node , int).
+type linear remove(node, node, int).
 
 /* We use a fully connected graph of processes */
 !edge(@1, @2). !edge(@1, @3). !edge(@1, @4).
@@ -25,87 +46,105 @@ type queue(node, list node, list int).
 !edge(@4, @2). !edge(@4, @3). !edge(@4, @1).
 
 request-ressource(A).
-my-time(A, 0).
+my-time(A, 1).
 start(A).
 !counter(A, 3).
-queue(A, [], []).
 
+/* Starts the counter */
 start(A), !counter(A, Total) -o countdown(A, Total).
 
 /* Updates the Lamport clock */
-update-time(A, TLocal, TRemote),
-TLocal < TRemote
-	-o my-time(A, TRemote+1).
+update-time(A, Tlocal, Tremote),
+Tlocal < Tremote
+	-o my-time(A, Tremote + 1).
 
 update-time(A, TLocal, TRemote),
 TLocal >= TRemote
-	-o my-time(A, TLocal+1).
-/* Would it be possible to express this in a nicer way (only one rule)? */
-/* Will the others my-time(A, _) be removed? */
+ 	-o my-time(A, TLocal + 1).
 
 /* Receive a request ressource from B */
 /* 1) Add it to the queue */
 /* 2) Send back a Ack */
-!edge(A, B),
 add-request(A, B, Tx),
-queue(A, Nodes, Times),
 my-time(A, Tm)
-	-o queue(A, addnodetoqueues(Nodes, Times, B, Tx), addnodetoqueuestime(Nodes, Times, B, Tx)),
-	   receive-ack(B, A, Tm)
-	   update-time(A, Tm, Tx).
+  -o bag(A, B, Tx),
+     update-time(A, Tm, Tx),
+     ack2send(A, B).
+
+!edge(A, B),
+ack2send(A, B),
+my-time(A, Tm)
+   -o receive-ack(B, A, Tm), 
+      my-time(A, Tm).
 
 /* Receives a remove-request */
 /* Remove the B, Tx from the queue */
-!edge(A, B),
 remove-request(A, B, Tx),
-queue(A, Nodes, Times),
+bag(A, B, Tx),
+A <> B,
 my-time(A, Tm)
-	-o queue(A, removenodefromqueues(Nodes, Times, B, Tx), removenodefromqueuestimes(Nodes, Times, B, Tx)),
-	   update-time(A, Tm, Tx).
+  -o update-time(A, Tm, Tx),
+	select-min-request(A).
+
+remove-request(A, A, T),
+bag(A, A, T) -o 1.
 
 /* 1) Add the request to its own queue */
 /* 2) Send to everybody, Pi request ressource at Tm */
-request-ressource(A)
+request-ressource(A),
 my-time(A, Tm)
-	-o add-request(A, A, Tm),
-           {B | !edge(A,B) | add-request(B, A, Tm), ressource-requested(A)}.
+	-o bag(A, A, Tm),
+	   my-time(A, Tm),
+           {B | !edge(A,B) | add-request(B, A, Tm)}, 
+	   select-min-request(A),
+           ressource-requested(A).
 
-
-/* Doesn't work as we have to dequeue a request -> must be a list */
-/* select-min-request(A)*/
-/*	-o [min => Tx | B | !edge(A,B), request(B, Tx), min-request(A,Tx)] */
+/* Select the request with the minimum T */
+/*select-min-request(A)	-o [min => Tx | B | !edge(A,B), request(B, Tx), min-request(A,Tx)] */
+[:min T | bag(A, B, T), select-min-request(A)] -o min-request(A, B, T), bag(A, B, T).
+//[:min T | bag(A, B, T)] -o min-request(A, B, T).
 
 /* Aggregates all the acks */
-select-min-ack(A)
-	-o [min => Tx | B | !edge(A,B), ack(A, B, Tx), update-time(A, Tm, Tx) | min-ack(A,Tx)].
-/* How to update Tm upon reception of each ack? */
+/*select-min-ack(A) -o [min => Tx | B | !edge(A,B), ack(A, B, Tx), update-time(A, Tm, Tx) | minAck(A,Tx)].*/
+select-min-ack(A) -o [min => Tx | B | !edge(A,B), ack(A, B, Tx) | minAck(A,Tx)].//, ack(A, B, Tx)].
 
+  
+my-time(A, Tm),
 receive-ack(A, B, Tx),
 countdown(A, N)
         -o ack(A, B, Tx),
-	   countdown(A, N - 1).
+	   countdown(A, N - 1),
+	   update-time(A, Tm, Tx).
 
 countdown(A, 0), !counter(A, N) -o select-min-ack(A), countdown(A, N).
 
 /* Conditions to enter in CS */
 /* 1) The request from the local processor has the lowest T */
 /* 2) All the acks have been received and their T is greater than local time */
-ressource-requested(A)
-min-request(A,Ty),
-my-time(A, Tm),
-Tm<Ty,
-min-ack(A,Tx),
-Tm<Tx
-	-o CS(A), my-time(A, Tm).
+//select-min-request(A),
+ressource-requested(A),
+min-request(A, A, Ty),
+minAck(A, Tx),
+Ty <= Tx
+	-o cs(A, Ty).
 
 /* We can enter the CS */
 /* After it's done we release the CS */
-!edge(A,B),
-my-time(Tm),
-CS(A)
-	-o CS_instructions(A),
-	set-color(A, 255, 0, 0),
-	{B | !edge(A, B) | remove-request(B, A, Tm)},
-	request-ressource(A)@+1s.
-/* How and we retrieve the right Tm without using a sorted queue? */
-/* Do we have a guarantee that CS() will be executed before remove-request?*/
+//!edge(A, B),
+cs(A, Ty)
+	-o !cs-instructions(A),
+	setcolor(A, 255, 0, 0),
+	{B | !edge(A, B) | remove-request(B, A, Ty)},
+//	remove-request(B, A, Ty),
+	remove-request(A, A, Ty).
+	request-ressource(A)@+5s.
+
+/* Do we have a guarantee that cs-instructions() will be executed before remove-request?*/
+// dequeue(A, B, [Nodes-queue | E], Nodes-Dequeue, [Times-queue | T], Times-dequeue),
+// B <> E -o 
+//         dequeue(A, B, Nodes-queue, [Nodes-dequeue | E], Times-queue, [Times-dequeue | T]).
+
+// dequeue(A, B, [Nodes-queue | E], Nodes-dequeue, [Times-queue | T], Times-dequeue),
+// B = E -o 
+//         queue(A, [Nodes-queue|Nodes-dequeue], [Times-queue|Times-dequeue]).
+

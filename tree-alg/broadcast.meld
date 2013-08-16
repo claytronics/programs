@@ -5,28 +5,28 @@
 
 /* Status:Working */  
 
-type route edge(node, node).
+type route neighbor(node, node, int).
 type linear send-broadcast(node, int).
 type linear already-sent-broadcast(node).
 type linear not-sent-broadcast(node).
 
 const root = @1.
 
-!edge(@1, @2). !edge(@1, @3). !edge(@1, @4).
-!edge(@2, @1). !edge(@2, @5).
-!edge(@3, @1). !edge(@3, @5).
-!edge(@4, @1). !edge(@4, @6).
-!edge(@5, @2). !edge(@5, @3). !edge(@5, @7).
-!edge(@6, @4). !edge(@6, @7).
-!edge(@7, @5). !edge(@7, @6).
+// !neighbor(@1, @2, 0). !neighbor(@1, @3, 0). !neighbor(@1, @4, 0).
+// !neighbor(@2, @1, 0). !neighbor(@2, @5, 0).
+// !neighbor(@3, @1, 0). !neighbor(@3, @5, 0).
+// !neighbor(@4, @1, 0). !neighbor(@4, @6, 0).
+// !neighbor(@5, @2, 0). !neighbor(@5, @3, 0). !neighbor(@5, @7, 0).
+// !neighbor(@6, @4, 0). !neighbor(@6, @7, 0).
+// !neighbor(@7, @5, 0). !neighbor(@7, @6, 0).
 
 send-broadcast(root, 0).
 not-sent-broadcast(A).
 
 send-broadcast(A, Level),
 not-sent-broadcast(A)  -o
-      {B | !edge(A, B) | send-broadcast(B, Level + 1)},
-      setcolor(A, (10 * Level) % 255, 0, 0),
+{B,X | !neighbor(A, B, X) | send-broadcast(B, Level + 1)},
+      setcolor(A, (50 * Level) % 255, 0, 0),
       already-sent-broadcast(A).
 
 already-sent-broadcast(A), send-broadcast(A, Level) -o already-sent-broadcast(A).
