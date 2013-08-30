@@ -1,11 +1,11 @@
 /* Lamport mutual exclusion Meld version */
 /* Uses linear logic */
 /* Author: J. Bourgeois and F. Cruz */
-/* (cl-meld:meld-compile "/home/bourgeois/programs/mutual-exclusion/lamport.meld" "/home/bourgeois/programs/mutual-exclusion/lamport") */
+/* (cl-meld:meld-compile "/home/bourgeois/programs/BlinkyBlocks/mutual-exclusion/lamport.meld" "/home/bourgeois/programs/BlinkyBlocks/mutual-exclusion/lamport") */
 
-/* Status: draft */
+/* Status: Compiling for Blinky Blocks -> Not tested, Working for multicore */
 
-type route edge(node, node).
+type route neighbor(node, node, int).
 
 /* Lamport clocks management */
 type linear update-time(node, int, int).
@@ -39,11 +39,11 @@ type cs-instructions(node).
 type linear bag(node, node , int).
 type linear remove(node, node, int).
 
-/* We use a fully connected graph of processes */
-!edge(@1, @2). !edge(@1, @3). !edge(@1, @4).
-!edge(@2, @1). !edge(@2, @3). !edge(@2, @4).
-!edge(@3, @2). !edge(@3, @1). !edge(@3, @4).
-!edge(@4, @2). !edge(@4, @3). !edge(@4, @1).
+/* For multiocre -> We use a fully connected graph of processes */
+/* !edge(@1, @2). !edge(@1, @3). !edge(@1, @4). */
+/* !edge(@2, @1). !edge(@2, @3). !edge(@2, @4). */
+/* !edge(@3, @2). !edge(@3, @1). !edge(@3, @4). */
+/* !edge(@4, @2). !edge(@4, @3). !edge(@4, @1). */
 
 request-ressource(A).
 my-time(A, 1).
@@ -71,7 +71,7 @@ my-time(A, Tm)
      update-time(A, Tm, Tx),
      ack2send(A, B).
 
-!edge(A, B),
+!neighbor(A, B, X),
 ack2send(A, B),
 my-time(A, Tm)
    -o receive-ack(B, A, Tm), 
@@ -95,19 +95,18 @@ request-ressource(A),
 my-time(A, Tm)
 	-o bag(A, A, Tm),
 	   my-time(A, Tm),
-           {B | !edge(A,B) | add-request(B, A, Tm)}, 
+           {B,X | !neighbor(A,B,X) | add-request(B, A, Tm)}, 
 	   select-min-request(A),
            ressource-requested(A).
 
 /* Select the request with the minimum T */
-/*select-min-request(A)	-o [min => Tx | B | !edge(A,B), request(B, Tx), min-request(A,Tx)] */
+/*select-min-request(A)	-o [min => Tx | B | !neighbor(A,B), request(B, Tx), min-request(A,Tx)] */
 [:min T | bag(A, B, T), select-min-request(A)] -o min-request(A, B, T), bag(A, B, T).
 //[:min T | bag(A, B, T)] -o min-request(A, B, T).
 
 /* Aggregates all the acks */
-/*select-min-ack(A) -o [min => Tx | B | !edge(A,B), ack(A, B, Tx), update-time(A, Tm, Tx) | minAck(A,Tx)].*/
-select-min-ack(A) -o [min => Tx | B | !edge(A,B), ack(A, B, Tx) | minAck(A,Tx)].//, ack(A, B, Tx)].
-
+/*select-min-ack(A) -o [min => Tx | B | !neighbor(A,B), ack(A, B, Tx), update-time(A, Tm, Tx) | minAck(A,Tx)].*/
+  select-min-ack(A) -o [min => Tx | B,X | !neighbor(A,B,X), ack(A, B, Tx) | minAck(A,Tx)].//, ack(A, B, Tx)].
   
 my-time(A, Tm),
 receive-ack(A, B, Tx),
@@ -130,11 +129,11 @@ Ty <= Tx
 
 /* We can enter the CS */
 /* After it's done we release the CS */
-//!edge(A, B),
+//!neighbor(A, B),
 cs(A, Ty)
 	-o !cs-instructions(A),
 	setcolor(A, 255, 0, 0),
-	{B | !edge(A, B) | remove-request(B, A, Ty)},
+	   {B,X | !neighbor(A, B, X) | remove-request(B, A, Ty)},
 //	remove-request(B, A, Ty),
 	remove-request(A, A, Ty).
 	request-ressource(A)@+5s.

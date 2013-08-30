@@ -1,0 +1,23 @@
+/* Simple flooding program which colors each level of the tree */
+/* Uses classical logic */
+/* Author: J. Bourgeois based on visit.meld from F. Cruz */
+/* (cl-meld:meld-compile "/home/bourgeois/programs/BlinkyBlocks/tree-alg/broadcast-classical.meld" "/home/bourgeois/programs/BlinkyBlocks/tree-alg/broadcast-classical") */
+
+/* Status: Not Working */  
+
+type route neighbor(node, node, int).
+type send-broadcast(node, int).
+type not-sent-broadcast(node, min int).
+
+const root = @1.
+
+!send-broadcast(root, 0).
+!not-sent-broadcast(A, 1).
+
+!send-broadcast(A, Level),
+     !not-sent-broadcast(A, 1)  -o
+      {B | !neighbor(A, B, _) | !send-broadcast(B, Level + 1)},
+      setcolor(A, (10 * Level) % 255, 0, 0),
+      !not-sent-broadcast(A, 0).
+
+
