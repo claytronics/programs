@@ -1,0 +1,64 @@
+// conway's game of life
+// http://en.wikipedia.org/wiki/Conway's_Game_of_Life
+
+include #data.meld
+
+//  1 2 3
+//  4 X 5
+//  6 7 8
+type neighbor(node, node, int).
+type neighbor-count(node, int).
+// (State, Iteration)
+type linear state(node, int, int).
+// (State, Iteration)
+type linear neighbor-state(node, int, int).
+// (Alive, Dead, Total)
+type linear current-count(node, int, int, int).
+type linear update-neighbor(node, int).
+type linear new-state(node, int, int).
+
+const alive = 1.
+const dead = 0.
+const maxiters = 10.
+
+update-neighbor(A, alive),
+current-count(A, Alive, Dead, N)
+   -o current-count(A, Alive + 1, Dead, N + 1).
+update-neighbor(A, dead),
+current-count(A, Alive, Dead, N)
+   -o current-count(A, Alive, Dead + 1, N + 1).
+
+current-count(A, Alive, Dead, N),
+!neighbor-count(A, N),
+state(A, dead, Iter),
+Alive = 3
+   -o new-state(A, alive, Iter + 1).
+
+current-count(A, Alive, Dead, N),
+!neighbor-count(A, N),
+state(A, State, Iter),
+Alive < 2
+   -o new-state(A, dead, Iter + 1).
+
+current-count(A, Alive, Dead, N),
+!neighbor-count(A, N),
+state(A, State, Iter),
+Alive = 2 || Alive = 3
+   -o new-state(A, State, Iter + 1).
+
+current-count(A, Alive, Dead, N),
+!neighbor-count(A, N),
+state(A, X, Iter),
+Alive > 3
+   -o new-state(A, dead, Iter + 1).
+
+new-state(A, State, Iter),
+Iter = maxiters
+   -o state(A, State, Iter).
+
+new-state(A, State, Iter),
+Iter < maxiters
+   -o state(A, State, Iter),
+      current-count(A, 0, 0, 0),
+      {B, Pos | !neighbor(A, B, Pos) | update-neighbor(B, State)}.
+
