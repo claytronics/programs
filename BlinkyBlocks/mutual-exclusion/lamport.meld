@@ -1,0 +1,149 @@
+/* Lamport mutual exclusion Meld version */
+/* Uses linear logic */
+/* Author: J. Bourgeois and F. Cruz */
+/* (cl-meld:meld-compile "/home/bourgeois/programs/BlinkyBlocks/mutual-exclusion/lamport.meld" "/home/bourgeois/programs/BlinkyBlocks/mutual-exclusion/lamport") */
+
+/* Status: Compiling for Blinky Blocks -> Not tested, Working for multicore */
+
+type route neighbor(node, node, int).
+
+/* Lamport clocks management */
+type linear update-time(node, int, int).
+type linear my-time(node, int).
+
+/* Requests management */
+type linear add-request(node, node, int).
+type linear remove-request(node, node, int).
+type linear request-ressource(node).
+type linear ressource-requested(node).
+type linear min-request(node, node, int).
+type linear select-min-request(node).
+
+/* Ack management */
+type linear ack(node, node, int).
+type linear select-min-ack(node).
+type linear minAck(node, int).
+type linear receive-ack(node, node, int).
+type linear ack2send(node, node).
+
+/* Counter needed to ensure that we received all the acks */
+type linear countdown(node, int).
+type counter(node, int).
+type linear start(node).
+
+/* Critical section */
+type linear cs(node, int).
+type cs-instructions(node).
+
+/* Data structure for the requests */
+type linear bag(node, node , int).
+type linear remove(node, node, int).
+
+/* For multiocre -> We use a fully connected graph of processes */
+/* !edge(@1, @2). !edge(@1, @3). !edge(@1, @4). */
+/* !edge(@2, @1). !edge(@2, @3). !edge(@2, @4). */
+/* !edge(@3, @2). !edge(@3, @1). !edge(@3, @4). */
+/* !edge(@4, @2). !edge(@4, @3). !edge(@4, @1). */
+
+request-ressource(A).
+my-time(A, 1).
+start(A).
+!counter(A, 3).
+
+/* Starts the counter */
+start(A), !counter(A, Total) -o countdown(A, Total).
+
+/* Updates the Lamport clock */
+update-time(A, Tlocal, Tremote),
+Tlocal < Tremote
+	-o my-time(A, Tremote + 1).
+
+update-time(A, TLocal, TRemote),
+TLocal >= TRemote
+ 	-o my-time(A, TLocal + 1).
+
+/* Receive a request ressource from B */
+/* 1) Add it to the queue */
+/* 2) Send back a Ack */
+add-request(A, B, Tx),
+my-time(A, Tm)
+  -o bag(A, B, Tx),
+     update-time(A, Tm, Tx),
+     ack2send(A, B).
+
+!neighbor(A, B, X),
+ack2send(A, B),
+my-time(A, Tm)
+   -o receive-ack(B, A, Tm), 
+      my-time(A, Tm).
+
+/* Receives a remove-request */
+/* Remove the B, Tx from the queue */
+remove-request(A, B, Tx),
+bag(A, B, Tx),
+A <> B,
+my-time(A, Tm)
+  -o update-time(A, Tm, Tx),
+	select-min-request(A).
+
+remove-request(A, A, T),
+bag(A, A, T) -o 1.
+
+/* 1) Add the request to its own queue */
+/* 2) Send to everybody, Pi request ressource at Tm */
+request-ressource(A),
+my-time(A, Tm)
+	-o bag(A, A, Tm),
+	   my-time(A, Tm),
+           {B,X | !neighbor(A,B,X) | add-request(B, A, Tm)}, 
+	   select-min-request(A),
+           ressource-requested(A).
+
+/* Select the request with the minimum T */
+/*select-min-request(A)	-o [min => Tx | B | !neighbor(A,B), request(B, Tx), min-request(A,Tx)] */
+[:min T | bag(A, B, T), select-min-request(A)] -o min-request(A, B, T), bag(A, B, T).
+//[:min T | bag(A, B, T)] -o min-request(A, B, T).
+
+/* Aggregates all the acks */
+/*select-min-ack(A) -o [min => Tx | B | !neighbor(A,B), ack(A, B, Tx), update-time(A, Tm, Tx) | minAck(A,Tx)].*/
+  select-min-ack(A) -o [min => Tx | B,X | !neighbor(A,B,X), ack(A, B, Tx) | minAck(A,Tx)].//, ack(A, B, Tx)].
+  
+my-time(A, Tm),
+receive-ack(A, B, Tx),
+countdown(A, N)
+        -o ack(A, B, Tx),
+	   countdown(A, N - 1),
+	   update-time(A, Tm, Tx).
+
+countdown(A, 0), !counter(A, N) -o select-min-ack(A), countdown(A, N).
+
+/* Conditions to enter in CS */
+/* 1) The request from the local processor has the lowest T */
+/* 2) All the acks have been received and their T is greater than local time */
+//select-min-request(A),
+ressource-requested(A),
+min-request(A, A, Ty),
+minAck(A, Tx),
+Ty <= Tx
+	-o cs(A, Ty).
+
+/* We can enter the CS */
+/* After it's done we release the CS */
+//!neighbor(A, B),
+cs(A, Ty)
+	-o !cs-instructions(A),
+	setcolor(A, 255, 0, 0),
+	   {B,X | !neighbor(A, B, X) | remove-request(B, A, Ty)},
+//	remove-request(B, A, Ty),
+	remove-request(A, A, Ty).
+	request-ressource(A)@+5s.
+
+/* Do we have a guarantee that cs-instructions() will be executed before remove-request?*/
+// dequeue(A, B, [Nodes-queue | E], Nodes-Dequeue, [Times-queue | T], Times-dequeue),
+// B <> E -o 
+//         dequeue(A, B, Nodes-queue, [Nodes-dequeue | E], Times-queue, [Times-dequeue | T]).
+
+// dequeue(A, B, [Nodes-queue | E], Nodes-dequeue, [Times-queue | T], Times-dequeue),
+// B = E -o 
+//         queue(A, [Nodes-queue|Nodes-dequeue], [Times-queue|Times-dequeue]).
+

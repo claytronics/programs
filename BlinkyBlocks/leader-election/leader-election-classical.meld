@@ -1,0 +1,15 @@
+/* Leader election using only non-linear rules */
+/* Authors: S. Goldstein and J. Bourgeois */
+/* Hypothesis: All nodes have an unique ID */
+/* (cl-meld:meld-compile "/home/bourgeois/programs/BlinkyBlocks/leader-election/leader-election-classical.meld" "/home/bourgeois/programs/BlinkyBlocks/leader-election/leader-election-classical") */
+
+/* Status: Compiling for Blinky Blocks -> Not tested yet, Working for multicore */
+
+type route neighbor(node, node, int).
+type leader(node, max int).
+type is-leader(node, int).
+
+!leader(X, node2int(X)).
+
+!neighbor(S, T, _), !leader(T, N), N > node2int(S) -o !leader(S, N), !is-leader(S, N).
+!is-leader(S, N), N = node2int(S) -o setcolor(S, 255,0,0).

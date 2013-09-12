@@ -2,7 +2,7 @@
 /* Hypothesis: Each process has a unique UID, bidirectionnal ring */
 /* Uses linear logic */
 /* Author: J. Bourgeois */
-/* (cl-meld:meld-compile "/home/bourgeois/programs/leader-election/HS-leader-election.meld" "/home/bourgeois/programs/leader-election/HS-leader-election") */
+/* (cl-meld:meld-compile "/home/bourgeois/programs/leader-election/HS-leader-election-linear.meld" "/home/bourgeois/programs/leader-election/HS-leader-election-linear") */
 
 /* Status:Working */  
 
