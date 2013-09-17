@@ -1,0 +1,18 @@
+/* All the processes will agree on a color */
+/* Uses classical logic */
+/* Author: F. Cruz and J. Bourgeois */
+/* (cl-meld:meld-compile "/home/bourgeois/programs/BlinkyBlocks/consensus/consensus-classical.meld" "/home/bourgeois/programs/BlinkyBlocks/consensus/consensus-classical") */
+
+/* Status: Working for Blinky Blocks */  
+
+type route neighbor(node, node, int).
+type has-color(node, min int).
+
+/* Color attribution */
+!has-color(A, node2int(A)).
+
+!neighbor(A, B, _),
+!has-color(A, Ca)
+   -o !has-color(B, Ca).
+
+!has-color(A, Ca) -o setcolor(A, (Ca * 10) % 255, 0, 0).
