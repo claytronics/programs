@@ -1,0 +1,93 @@
+/* Two blocks are tapped, the shortest path between these blocks is colored */
+/* Uses classical logic */
+/* Author: S. Goldstein and J. Bourgeois */
+/* (cl-meld:meld-compile "/home/bourgeois/programs/shortest-path/tapping-shortest-path.meld" "/home/bourgeois/programs/shortest-path/tapping-shortest-path") */
+
+/* Status: draft */  
+
+type route edge(node, node).
+/*nearTap(Node me, node src, min int distance, int tapid).*/
+type nearTap(node, node int, int).
+
+/*onPath(Node me, node tot1, node tot2, min int dist, int tap1, int tap2)*/
+type onPath(node, node, node, min int, int, int).
+type linear isTapped(node).
+type nearType(node, node, int, int).
+//type pathDist(node, node, int, int, int).
+type colorPath(node, node, int).
+type shortPath( node, node, int, int, int).
+
+/* Definition of a bidirectional ring topology with 8 nodes */
+/* !edge(@1, @8). !edge(@1, @2).  */
+/* !edge(@2, @1). !edge(@2, @3).  */
+/* !edge(@3, @2). !edge(@3, @4).  */
+/* !edge(@4, @3). !edge(@4, @5). */
+/* !edge(@5, @4). !edge(@5, @6). */
+/* !edge(@6, @5). !edge(@6, @7).    */
+/* !edge(@7, @6). !edge(@7, @8).    */
+/* !edge(@8, @7). !edge(@8, @1).  */
+
+/* Definition of a random topology */
+!edge(@1, @2). !edge(@1, @3). !edge(@1, @4).
+!edge(@2, @1). !edge(@2, @5).
+!edge(@3, @1). !edge(@3, @5).
+!edge(@4, @1). !edge(@4, @6).
+!edge(@5, @2). !edge(@5, @3). !edge(@5, @7).
+!edge(@6, @4). !edge(@6, @7).
+!edge(@7, @5). !edge(@7, @6).
+
+isTapped(@1). isTapped(@5).
+
+isTapped(X) -o
+       !nearTap(X, X, 0, node2int(X)).
+
+/* Generate the min path between two taps */
+!nearTap(X, Y, Dist, Tapid),
+!edge(X, Z),
+Y <> Z -o
+     !nearTap(Z, X, Dist + 1, Tapid).
+
+/* Use the min aggregate of onPath to find the minimum distance pathS between the two tapped blocks */
+!nearTap(X, Y, D1, T1),
+!nearTap(X, Z, D2, T2),
+Y <> Z,
+T1 < T2
+   -o !onPath(X, Y, Z, D1 + D2, T1, T2).
+
+/* I don't understand pathDist, I think we replaced it with onPath or shortPath */
+// !pathDist(Me, X, D, T1, T2),
+// !nearTap(Me, X, _, T1) -o
+// 	     !pathDist(Me, X, D, T1, T2).
+
+// !pathDist(Me, X, D, T1, T2),
+// !nearTap(Me, X, _, T2) -o
+// 	     !pathDist(Me, X, D, T1, T2).
+
+// !nearTap(X, X, 0, T1),
+// !pathDist(X, D, T1, T2),
+// T1 < T2
+//    -o !colorPath(X, X, T1).
+
+/* Several shortest paths exist only one should be colored */
+!shortPath(X, Y, D, T1, T2),
+!nearTap(X, Y, D1, T1),
+!nearTap(Y, Z, D1 - 1, T1) -o
+	   !shortPath(Y, Z, D, T1, T2).
+
+!shortPath(X, X, D, T1, T2),
+!nearTap(X, X, 0, T1) -o
+	   !setColorPath(X, D, T1, T2).
+
+!setColorPath(X, D, T1, T2),
+!shortPath(X, Y, D, T1, T2) -o 
+	     !setColorPath(Y, D, T1, T2).
+
+!setColorPath(X, D, T1, T2),
+!onPath(X, Y, Z, D, T1, T2) -o 
+	     !setColorPath(Z, D, T1, T2).
+
+!setColorPath(X, D, T1, T2),
+!nearTap(X, Z, _, T2) -o 
+	     !setColorPath(Z, D, T1, T2).
+
+

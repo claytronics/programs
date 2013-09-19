@@ -1,0 +1,76 @@
+/* Two blocks are tapped, the shortest path between these blocks is colored */
+/* Uses classical logic */
+/* Author: S. Goldstein and J. Bourgeois */
+/* (cl-meld:meld-compile "/home/bourgeois/programs/shortest-path/tapping-shortest-path-vj.meld" "/home/bourgeois/programs/shortest-path/tapping-shortest-path-vj") */
+
+/* Status: draft */  
+
+type route edge(node, node).
+type onOneShortestPath(node, int, int).
+type route uniqueNearTap(node, node, int, int).
+type route onPath(node, node, node, min int, int, int).
+type isTapped(node, node).
+
+/* Definition of a bidirectional ring topology with 8 nodes */
+/* !edge(@1, @8). !edge(@1, @2).  */
+/* !edge(@2, @1). !edge(@2, @3).  */
+/* !edge(@3, @2). !edge(@3, @4).  */
+/* !edge(@4, @3). !edge(@4, @5). */
+/* !edge(@5, @4). !edge(@5, @6). */
+/* !edge(@6, @5). !edge(@6, @7).    */
+/* !edge(@7, @6). !edge(@7, @8).    */
+/* !edge(@8, @7). !edge(@8, @1).  */
+
+/* Definition of a random topology */
+// !edge(@1, @2). !edge(@1, @3). !edge(@1, @4).
+// !edge(@2, @1). !edge(@2, @5).
+// !edge(@3, @1). !edge(@3, @5).
+// !edge(@4, @1). !edge(@4, @6).
+// !edge(@5, @2). !edge(@5, @3). !edge(@5, @7).
+// !edge(@6, @4). !edge(@6, @7).
+// !edge(@7, @5). !edge(@7, @6).
+
+!edge(@1, @2). !edge(@1, @3). 
+!edge(@2, @1). !edge(@2, @4).
+!edge(@3, @1). !edge(@3, @4).
+!edge(@4, @2). !edge(@4, @3).
+
+!isTapped(A, @1). !isTapped(A, @4).
+
+!isTapped(X, X) -o !onOneShortestPath(X, 0, node2int(X)).
+
+/* Generates min pathS between two taps */
+!onOneShortestPath(A, Dist1, Tapid), !onOneShortestPath(A, Dist2, Tapid), Dist1 <= Dist2 -o !onOneShortestPath(A, Dist1, Tapid).
+
+!onOneShortestPath(A, Dist, Tapid), 
+!isTapped(A, T), 
+A <> T -o {B | !edge(B, A) | !onOneShortestPath(B, Dist + 1, Tapid)}.
+
+// !edge(B, C),
+// C <> A,
+// !isTapped(T),
+// C <> T
+//   -o !shortest-paths(B, C, Dist + 1, Tapid).
+
+/* Selects a unique minimal path between two taps */
+// !nearTap(X, Y, 1, T) -o uniqueNearTap(X, Y, 1, T).
+
+// !edge(U, Y),
+// !edge(V, Y),
+// uniqueNearTap(X, U, D, T),
+// uniqueNearTap(X, V, D, T),
+// node2int(U) < node2int(V)
+//    -o uniqueNearTap(X, Y, D + 1, T).
+
+/* Uses the min aggregate of onPath to find the minimum distance pathS between the two tapped blocks */
+// uniqueNearTap(X, Y, D1, T1),
+// uniqueNearTap(Z, Y, D2, T2),
+// X <> Z,
+// T1 < T2
+//    -o !onPath(X, Y, Z, D1 + D2, T1, T2).
+
+// /* Colors the path */
+// !onPath(A, _, _, _, _, _) -o setColor(A, 255, 0, 0).
+// !onPath(_, A, _, _, _, _) -o setColor(A, 255, 0, 0).
+// !onPath(_, _, A, _, _, _) -o setColor(A, 255, 0, 0).
+

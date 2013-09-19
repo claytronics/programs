@@ -1,0 +1,31 @@
+/* Leader election using only classical rules */
+/* Authors: S. Goldstein and J. Bourgeois */
+/* Hypothesis: All nodes have an unique ID */
+/* (cl-meld:meld-compile "/home/bourgeois/programs/BlinkyBlocks/leader-election/leader-election-classical-flavor1.meld" "/home/bourgeois/programs/BlinkyBlocks/leader-election/leader-election-classical-flavor1") */
+
+/* Status: draft version, not compiling yet */
+
+type route neighbor(node, node, int).
+type leader(node, max int).
+type electing(node).
+type sendLeader(node, node, int).
+
+!leader(X, node2int(X)).
+!electing(X).
+
+!electing(X),
+!leader(X, N),
+node2int(X) < N -o
+	       {B,Z | !neighbor(X,B,Z) | !sendLeader(B, X, N)}, !leader(X,N).
+
+!sendLeader(X,_,V),
+!leader(X, M),
+M < V -o
+    !electing(X), !leader(X, V).
+
+!electing(X),
+!leader(X,N),
+!sendLeader(X,_,M),
+N > M -o
+    leader(X,N).
+

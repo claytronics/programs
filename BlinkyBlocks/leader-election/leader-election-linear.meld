@@ -1,0 +1,27 @@
+/* Leader election using mainly linear rules */
+/* Authors: S. Goldstein and J. Bourgeois */
+/* Hypothesis: All nodes have an unique ID */
+/* (cl-meld:meld-compile "/home/bourgeois/programs/BlinkyBlocks/leader-election/leader-election-linear.meld" "/home/bourgeois/programs/BlinkyBlocks/leader-election/leader-election-linear") */
+
+/* Status: draft version, not compiling yet, not-sent? */
+
+type route neighbor(node, node, int).
+type linear leader(node, max int).
+type linear n-leader(node, node, int).
+type linear elected(node).
+type not-sent(node).
+
+leader(X, node2int(X)).
+!not-sent(X).
+
+!not-sent(S),
+!neighbor(S, T, _),
+leader(S, ME) -o
+	  n-leader(T, S, ME).
+
+n-leader(T, S, SN),
+leader(T, Tt),
+Tt < SN -o
+   leader(T, SN), elected(T).
+
+elected(T), leader(T, SN), SN = node2int(A) -o setcolor(T, 255, 0, 0).
