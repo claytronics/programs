@@ -1,0 +1,102 @@
+Leader election, build different topologies and color the leader
+----------------------------------------------------------------
+
+-HS Leader election in ring programmed in linear logic
+    ./leader-election/HS-leader-election-linear.meld
+	Multicore version: Working
+    	Blinky Blocks version: Working
+
+-HS leader election in ring programmed in classical logic 
+    ./leader-election/HS-leader-election-classical-j.meld
+	Multicore version: Working
+    	Blinky Blocks version: Working
+    ./leader-election/HS-leader-election-classical.meld 	
+    	Not working
+
+-Leader election programmed in linear logic
+    ./leader-election/leader-election-linear.meld	
+        Not working
+
+-Leader election programmed in classical logic logic
+    ./leader-election/leader-election-classical.meld
+	Multicore version: Working
+    	Blinky Blocks version: Working
+    ./leader-election/leader-election-classical-flavor1.meld 	
+    	Not working, need help from Seth
+
+-LCR leader election in ring 	
+     TODO
+
+Vertex coloring
+---------------
+     TODO
+
+Clocks, ordering of events
+--------------------------
+-All blocks are changing colors and one process records the state every t
+     TODO
+-Replay a pattern respecting the ordering by tapping the blocks
+     TODO using Lamport clocks from mutual exclusion
+
+Consensus
+---------
+They have to agree all on a color randomly chosen
+
+-Consensus election programmed in classical logic
+    ./consensus/consensus.meld
+	Multicore version: Working
+    	Blinky Blocks version: Working
+
+Shortest path
+--------------
+Tap two blocks and display the shortest path 
+    ./shortest-path/tapping-shortest-path.meld
+    ./shortest-path/tapping-shortest-path-v2.meld
+    ./shortest-path/tapping-shortest-path-vj.meld
+    Not working
+
+Shortest path
+    ./shortest-path/shortest-path.meld
+    Multicore version: Working
+    Blinky Blocks version: TODO
+ 
+Mutual exclusion
+----------------
+Only one can have the blue color at a given time
+
+-Lamport mutual execution
+    ./mutual-exclusion/lamport.meld
+	Multicore version: Working
+    	Blinky Blocks version: Not working
+   
+Token passing
+-------------
+TODO
+
+Two Phase Commit
+----------------
+TODO
+
+Tree/graph algorithms
+---------------------
+-Broadcast using linear logic 
+    ./tree-alg/broadcast.meld 
+	Multicore version: Working
+    	Blinky Blocks version: Working
+
+Broadcast using classical logic 
+    ./tree-alg/broadcast-classical.meld
+	Multicore version: Working
+    	Blinky Blocks version: Working
+
+Convergecast
+TODO
+
+Spanning tree
+TODO
+
+Minimum Weight Spanning Tree 	
+    ./tree-alg/mwst.meld
+	Multicore version: Working
+    	Blinky Blocks version: TODO
+
